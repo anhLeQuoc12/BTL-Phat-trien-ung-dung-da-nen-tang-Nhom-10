@@ -5,4 +5,4 @@ const router = express.Router();
 
 router.get("/meal-suggestion", getSuggestMeal);
 
-exports.router = router;
+module.exports = router;
