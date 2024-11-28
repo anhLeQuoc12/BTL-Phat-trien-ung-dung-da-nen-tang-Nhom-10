@@ -6,6 +6,6 @@ const authMiddleware = (req, res, next) => {
     if (!token) {
         res.status(403).json({ message: "User is not authenticated."});
     } else {
-
+        
     }
 }
