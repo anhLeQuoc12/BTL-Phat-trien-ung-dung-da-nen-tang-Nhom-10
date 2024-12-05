@@ -1,12 +1,32 @@
-const mongoose = require("mongoose");
+const { CategoryModel } = require("../models");
+const { status } = require("../utils/constant");
 
-const getAllCategories = async () => {};
+const getAllCategories = async () => {
+  // TODO: cache
+  const categories = await CategoryModel.find({
+    status: { $ne: status.disabled },
+  });
+  return categories;
+};
 
-const createCategory = async () => {};
+const createCategory = async (createBody) => {
+  await CategoryModel.create(createBody);
+};
 
-const updateCategoryById = async () => {};
+const updateCategoryById = async ({ updateBody, categoryId }) => {
+  const updatedCategory = await CategoryModel.findByIdAndUpdate(
+    categoryId,
+    { $set: updateBody },
+    { new: true }
+  );
+  return updatedCategory;
+};
 
-const deleteCategoryById = async () => {};
+const deleteCategoryById = async (categoryId) => {
+  await CategoryModel.findByIdAndUpdate(categoryId, {
+    $set: { status: status.disabled },
+  });
+};
 
 module.exports = {
   getAllCategories,
