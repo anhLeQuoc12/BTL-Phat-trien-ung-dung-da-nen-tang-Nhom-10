@@ -1,8 +1,8 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, SchemaTypes } = require("mongoose");
 
 const recipeSchema = new Schema({
     userId: {
-        type: ObjectId,
+        type: SchemaTypes.ObjectId,
         ref: User,
         required: true
     },
@@ -12,7 +12,7 @@ const recipeSchema = new Schema({
     },
     ingredients: [{
         foodId: {
-            type: ObjectId,
+            type: SchemaTypes.ObjectId,
             ref: Food,
             required: true
         },
@@ -23,12 +23,7 @@ const recipeSchema = new Schema({
     }],
     content: [String],
     description: [String],
-    createdAt: {
-        type: Date,
-        default: () => Date.now(),
-        immutable: true
-    },
-    updatedAt: Date
+    timestamps: true
 })
 
 const Recipe = model("Recipe", recipeSchema);
