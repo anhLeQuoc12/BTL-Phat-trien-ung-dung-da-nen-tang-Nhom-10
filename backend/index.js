@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
+const auth = require("./routes/auth");
 const recipeRoutes = require("./routes/recipe");
 const mealPlanRoutes = require("./routes/mealPlan");
 const mealSuggestRoutes = require("./routes/mealSuggest");
@@ -18,6 +19,7 @@ app.use("/api/recipe", recipeRoutes);
 app.use("/api/report-by-weeks", weeklyShoppingReportRoutes)
 app.use("/api/mealPlan", mealPlanRoutes);
 app.use("/api/mealSuggest", mealSuggestRoutes);
+app.use("/api/auth", auth);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
