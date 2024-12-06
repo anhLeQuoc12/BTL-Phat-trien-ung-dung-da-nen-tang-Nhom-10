@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { toJSON, paginate } = require("../../models/plugins");
+const { status } = require("../utils/constant");
 
 const userGroupSchema = mongoose.Schema(
   {
@@ -12,6 +13,11 @@ const userGroupSchema = mongoose.Schema(
         ref: "User",
       },
     ],
+    status: {
+      type: String,
+      enum: [status.enabled, status.disabled],
+      default: status.enabled,
+    },
   },
   {
     timestamps: true,

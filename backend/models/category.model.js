@@ -1,10 +1,16 @@
 const mongoose = require("mongoose");
-const { toJSON, paginate } = require("../../models/plugins");
+const { toJSON, paginate } = require("./plugins");
+const { status } = require("../utils/constant");
 
 const categorySchema = mongoose.Schema(
   {
     name: {
       type: String,
+    },
+    status: {
+      type: String,
+      enum: [status.enabled, status.disabled],
+      default: status.enabled,
     },
   },
   {
