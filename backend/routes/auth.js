@@ -19,7 +19,6 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-    // Để đơn giản, bạn có thể xóa token trên client hoặc thiết lập token hết hạn
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
