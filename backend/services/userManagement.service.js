@@ -1,18 +1,34 @@
-const mongoose = require("mongoose");
+const { UserModel } = require("../models");
+const { status } = require("../utils/constant");
 
-const getUserById = async () => { };
+const getUserById = async (userId) => {
+  const userGroup = await UserModel.findById(userId);
+  return userGroup;
+};
 
-const queryUser = async () => { };
+const queryUser = async (query) => {
+  const users = await UserModel.find(query);
+  return users;
+};
 
-const updateUserById = async () => { };
+const updateUserById = async ({ userId, updateBody }) => {
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    userId,
+    { $set: updateBody },
+    { new: true }
+  );
+  return updatedUser;
+};
 
-const deleteUserById = async () => { };
+const deleteUserById = async (userId) => {
+  await UserModel.findByIdAndUpdate(userId, {
+    $set: { status: status.disabled },
+  });
+};
 
 module.exports = {
-	createUser,
 	getUserById,
 	queryUser,
 	updateUserById,
-	deleteUserById,
-	changePassword
+	deleteUserById
 };
