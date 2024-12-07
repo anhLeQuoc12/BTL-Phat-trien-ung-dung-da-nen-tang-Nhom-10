@@ -4,6 +4,7 @@ const { FridgeItem, Fridge } = require('../models/fridgeItem');
 const createFridgeItem = async (data, userId) => {
 	const { food, quantity, expirationDate, storageLocation } = data;
 
+	//tạo item mới
 	const newFridgeItem = await FridgeItem.create({
 		userId: userId,
 		food: food,
@@ -11,6 +12,17 @@ const createFridgeItem = async (data, userId) => {
 		expirationDate: expirationDate,
 		storageLocation: storageLocation
 	});
+
+	//thêm item vào Fridge của user
+	const fridge = await Fridge.findOne({ userId }).exec();
+
+        if (!fridge) {
+            throw new Error('Fridge not found for the user');
+        }
+
+        fridge.items.push(newFridgeItem);
+
+        await fridge.save();
 
 	return newFridgeItem;
 };
