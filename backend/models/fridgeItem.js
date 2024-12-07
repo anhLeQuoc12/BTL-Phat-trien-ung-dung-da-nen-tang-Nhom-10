@@ -9,12 +9,13 @@ const fridgeItemSchema = new mongoose.Schema({
 		unique: true
 	},
 	userId: {
-		type: String,
+		type: ObjectId,
+		ref: "User",
 		required: true
 	},
 	food: {
 		type: Object,
-		ref: Food,
+		ref: "Food",
 		required: true
 	},
 	quantity: {
@@ -67,19 +68,14 @@ const fridgeSchema = new mongoose.Schema({
 		required: true
 	},
 	items: {
-		type: [fridgeItemSchema], // Array of Fridge Items
+		type: [FridgeItem], // Array of Fridge Items
 		required: true,
 		default: []
-	},
-	createdAt: {
-		type: String,
-		required: true
-	},
-	updatedAt: {
-		type: String,
-		required: true
+	}},
+	{
+		timestamps: true
 	}
-});
+);
 
 const FridgeItem = mongoose.model('FridgeItem', fridgeItemSchema);
 const Fridge = mongoose.model("Fridge", fridgeSchema);

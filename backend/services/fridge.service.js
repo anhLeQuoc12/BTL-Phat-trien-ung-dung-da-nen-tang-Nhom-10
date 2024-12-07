@@ -4,6 +4,7 @@ const { FridgeItem, Fridge } = require('../models/fridgeItem');
 const createFridgeItem = async (data, userId) => {
 	const { food, quantity, expirationDate, storageLocation } = data;
 
+	//tạo item mới
 	const newFridgeItem = await FridgeItem.create({
 		userId: userId,
 		food: food,
@@ -12,13 +13,22 @@ const createFridgeItem = async (data, userId) => {
 		storageLocation: storageLocation
 	});
 
+	//thêm item vào Fridge của user
+	const fridge = await Fridge.findOne({ userId }).exec();
+
+        if (!fridge) {
+            throw new Error('Fridge not found for the user');
+        }
+
+        fridge.items.push(newFridgeItem);
+
+        await fridge.save();
+
 	return newFridgeItem;
 };
 
 const getAllFridgeItem = async (userId) => {
-	const fridgeItems = await Fridge.find({
-		userId: userId
-	}).exec();
+	const fridgeItems = await Fridge.findOne({ userId: userId }, "items").exec();
 
 	return fridgeItems;
 };
@@ -69,7 +79,7 @@ const deleteFridgeItemById = async (id, userId) => {
 
 		return result;
 	} catch (error) {
-		throw new Error(`Error updating fridge item: ${error.message}`);
+		throw new Error(`Error deleting fridge item: ${error.message}`);
 	}
  };
 
@@ -98,7 +108,7 @@ const markItemUsed = async (id, userId, usedQuantity) => {
 	
 		return updatedFridgeItem; 
 	} catch (error) {
-		throw new Error(`Error updating fridge item: ${error.message}`);
+		throw new Error(`Error marking fridge item: ${error.message}`);
 	}
 }
 

@@ -4,7 +4,7 @@ const fridge = require('../services/fridge.service');
 const createFridgeItem = async (req, res) => {
 	const userId = res.locals.userId;
 	try {
-		const item = await fridge.getAllFridgeItem(req.body, userId);
+		const item = await fridge.createFridgeItem(req.body, userId);
 		res.status(201).json({ message: "New fridge item created successfully", item });
 	} catch (error) {
 		res.status(error.status || 500).json({ message: error.message });
