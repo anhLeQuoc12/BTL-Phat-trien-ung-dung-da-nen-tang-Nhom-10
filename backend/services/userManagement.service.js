@@ -27,8 +27,8 @@ const deleteUserById = async (userId) => {
 };
 
 module.exports = {
-  getUserById,
-  queryUser,
-  updateUserById,
-  deleteUserById,
+	getUserById,
+	queryUser,
+	updateUserById,
+	deleteUserById
 };

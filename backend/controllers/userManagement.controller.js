@@ -34,8 +34,8 @@ const deleteUserById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  queryUser,
-  getUserById,
-  updateUserById,
-  deleteUserById,
+	queryUser,
+	getUserById,
+	updateUserById,
+	deleteUserById
 };
