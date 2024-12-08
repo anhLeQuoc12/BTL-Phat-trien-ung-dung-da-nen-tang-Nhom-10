@@ -7,6 +7,9 @@ const unitSchema = mongoose.Schema(
     name: {
       type: String,
     },
+    acronym: {
+      type: String,
+    },
     status: {
       type: String,
       enum: [status.enabled, status.disabled],
