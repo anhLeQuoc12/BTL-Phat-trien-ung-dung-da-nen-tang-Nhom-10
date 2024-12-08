@@ -14,7 +14,7 @@ const createUnit = catchAsync(async (req, res) => {
   throwBadRequest(_.get(req, "user.role") !== roleMap.admin, "Forbidden!");
   const createBody = req.body;
   await unitManagementService.createUnit(createBody);
-  res.status(201);
+  res.sendStatus(201);
 });
 
 const updateUnitById = catchAsync(async (req, res) => {
@@ -22,14 +22,14 @@ const updateUnitById = catchAsync(async (req, res) => {
   const { unitId } = req.params;
   const updateBody = req.body;
   await unitManagementService.updateUnitById({ updateBody, unitId });
-  res.status(200);
+  res.sendStatus(200);
 });
 
 const deleteUnitById = catchAsync(async (req, res) => {
   throwBadRequest(_.get(req, "user.role") !== roleMap.admin, "Forbidden!");
   const { unitId } = req.params;
   await unitManagementService.deleteUnitById(unitId);
-  res.status(200);
+  res.sendStatus(200);
 });
 
 module.exports = {

@@ -17,7 +17,7 @@ const createUserGroup = catchAsync(async (req, res) => {
   throwBadRequest(_.get(req, "user.role") !== roleMap.admin, "Forbidden!");
   const createBody = req.body;
   await userGroupManagementService.createUserGroup(createBody);
-  res.status(201);
+  res.sendStatus(201);
 });
 
 const updateUserGroupById = catchAsync(async (req, res) => {
@@ -28,14 +28,14 @@ const updateUserGroupById = catchAsync(async (req, res) => {
     updateBody,
     userGroupId,
   });
-  res.status(200);
+  res.sendStatus(200);
 });
 
 const deleteUserGroupById = catchAsync(async (req, res) => {
   throwBadRequest(_.get(req, "user.role") !== roleMap.admin, "Forbidden!");
   const { userGroupId } = req.params;
   await userGroupManagementService.deleteUserGroupById(userGroupId);
-  res.status(200);
+  res.sendStatus(200);
 });
 
 module.exports = {

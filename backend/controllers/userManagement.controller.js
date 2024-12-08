@@ -23,14 +23,14 @@ const updateUserById = catchAsync(async (req, res) => {
   const { userId } = req.params;
   const updateBody = req.body;
   await userManagementService.updateUserById({ userId, updateBody });
-  res.status(200);
+  res.sendStatus(200);
 });
 
 const deleteUserById = catchAsync(async (req, res) => {
   throwBadRequest(_.get(req, "user.role") !== roleMap.admin, "Forbidden!");
   const { userId } = req.params;
   await userManagementService.deleteUserById(userId);
-  res.status(200);
+  res.sendStatus(200);
 });
 
 module.exports = {
