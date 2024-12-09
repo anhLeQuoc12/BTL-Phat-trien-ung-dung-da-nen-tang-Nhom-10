@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const { toJSON, paginate } = require("../../models/plugins");
-const { status } = require("../utils/constant");
+const { toJSON, paginate } = require("./plugins");
 
 const unitSchema = mongoose.Schema(
   {
