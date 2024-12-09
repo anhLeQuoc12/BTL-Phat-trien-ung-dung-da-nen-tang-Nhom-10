@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { toJSON, paginate } = require("../../models/plugins");
+const { toJSON, paginate } = require("./plugins");
 
 const categorySchema = mongoose.Schema(
   {
