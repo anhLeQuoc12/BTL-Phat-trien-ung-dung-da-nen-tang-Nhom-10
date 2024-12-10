@@ -1,4 +1,6 @@
 const { Schema, model, SchemaTypes } = require("mongoose");
+const User = require("./user.model");
+const Food = require("./food");
 
 const recipeSchema = new Schema({
     userId: {
@@ -23,8 +25,7 @@ const recipeSchema = new Schema({
     }],
     content: [String],
     description: [String],
-    timestamps: true
-})
+}, { timestamps: true })
 
 const Recipe = model("Recipe", recipeSchema);
 module.exports = Recipe;
