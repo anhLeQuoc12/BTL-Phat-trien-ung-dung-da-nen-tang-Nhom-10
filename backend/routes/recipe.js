@@ -8,6 +8,6 @@ router.get("", authMiddleware, getAllRecipes);
 router.get("/:id", authMiddleware, getRecipeById);
 router.put("/:id", authMiddleware, updateRecipeById);
 router.delete("/:id", authMiddleware, deleteRecipeById);
-// router.post("/:id", authMiddleware, connectRecipeWithFridge);
+// router.post("/:id/connect-with-fridge", authMiddleware, connectRecipeWithFridge);
 
 module.exports = router;

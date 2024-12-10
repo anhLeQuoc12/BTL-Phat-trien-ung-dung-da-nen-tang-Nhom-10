@@ -10,7 +10,8 @@ const getAllUnits = async () => {
 };
 
 const createUnit = async (createBody) => {
-  await UnitModel.create(createBody);
+  const unit = await UnitModel.create(createBody);
+  return unit;
 };
 
 const updateUnitById = async ({ unitId, updateBody }) => {

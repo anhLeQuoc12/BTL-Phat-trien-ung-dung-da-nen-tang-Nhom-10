@@ -1,4 +1,4 @@
-const Recipe = require('../models/recipe.model');
+const Recipe = require('../models/recipe');
 
 async function getSuggestMeal(req, res) {
     const ingredients = req.body.ingredients;

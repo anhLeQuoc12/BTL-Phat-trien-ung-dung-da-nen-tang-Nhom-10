@@ -1,4 +1,4 @@
-import MealPlan from "../models/mealPlan";
+const MealPlan = require("../models/mealPlan");
 
 async function createMealPlan(req, res) {
     const { userId, date, time, recipes } = req.body;
@@ -89,4 +89,13 @@ async function deleteMealPlan(req, res) {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
+}
+
+module.exports = {
+    createMealPlan,
+    getAllMealPlansWithUserId,
+    getMealPlansWithUserIdAtDate,
+    getMealPlansWithUserIdAtTime,
+    updateMealPlan,
+    deleteMealPlan
 }

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { toJSON, paginate } = require("./plugins");
+const { status } = require("../utils/constant");
 
 const categorySchema = mongoose.Schema(
   {

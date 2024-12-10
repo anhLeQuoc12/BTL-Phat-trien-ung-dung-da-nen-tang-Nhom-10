@@ -12,14 +12,15 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid users phone ' });
         }
 
-        const hashedPassword = user.password;
-        const isMatch = await bcrypt.compare(password, hashedPassword);
+        // const hashedPassword = user.password;
+        // const isMatch = await bcrypt.compare(password, hashedPassword);
+        const isMatch = user.password === password;
 
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid password' });
         }
         
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRETKEY, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRETKEY, { expiresIn: '2h' });
         res.status(200).json({ token });
     } catch (error) {
         res.status(500).json({ error: error.message });
