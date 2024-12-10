@@ -14,7 +14,7 @@ const createCategory = catchAsync(async (req, res) => {
   throwBadRequest(_.get(req, "user.role") !== roleMap.admin, "Forbidden!");
   const createBody = req.body;
   await categoryManagementService.createCategory(createBody);
-  res.status(201);
+  res.sendStatus(201);
 });
 
 const updateCategoryById = catchAsync(async (req, res) => {
@@ -25,14 +25,14 @@ const updateCategoryById = catchAsync(async (req, res) => {
     updateBody,
     categoryId,
   });
-  res.status(200);
+  res.sendStatus(200);
 });
 
 const deleteCategoryById = catchAsync(async (req, res) => {
   throwBadRequest(_.get(req, "user.role") !== roleMap.admin, "Forbidden!");
   const { categoryId } = req.params;
   await categoryManagementService.deleteCategoryById(categoryId);
-  res.status(200);
+  res.sendStatus(200);
 });
 
 module.exports = {
