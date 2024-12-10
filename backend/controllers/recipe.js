@@ -1,4 +1,5 @@
 const Recipe = require("../models/recipe");
+const ObjectId = require("mongodb").ObjectId;
 
 async function createRecipe(req, res) {
     const { name, ingredients, content, description } = req.body;
@@ -40,7 +41,11 @@ async function getRecipeById(req, res) {
             _id: new ObjectId(recipeId),
             userId: userId
         }).populate("ingredients.foodId").exec();
-        return res.status(200).json(recipe);
+        if (recipe) {
+            return res.status(200).json(recipe);
+        } else {
+            return res.status(400).json({ message: "Can't find recipe with ID supplied." });
+        }
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -50,6 +55,10 @@ async function updateRecipeById(req, res) {
     const recipeId = req.params.id;
     const { newName, newIngredients, newContent, newDescription } = req.body;
     const userId = res.locals.userId;
+
+    if (!newName && !newIngredients && !newContent && !newDescription) {
+        return res.json({ message: "Updating recipe needs at least 1 of 4 following information: newName, newIngredients, newContent or newDescription" });
+    }
 
     const updateObject = {};
     if (newName) {
@@ -69,8 +78,12 @@ async function updateRecipeById(req, res) {
         const updatedRecipe = await Recipe.findOneAndUpdate({
             _id: new ObjectId(recipeId),
             userId: userId
-        }, updateObject).exec();
-        return res.status(200).json(updatedRecipe);
+        }, updateObject, { returnOriginal: false }).exec();
+        if (updatedRecipe) {
+            return res.status(200).json(updatedRecipe);
+        } else {
+            return res.status(400).json({ message: "Can't find recipe with ID supplied." });
+        }
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -85,7 +98,11 @@ async function deleteRecipeById(req, res) {
             _id: new ObjectId(recipeId),
             userId: userId
         }).exec();
-        return res.status(200).json({ message: "Delete recipe successfully."});
+        if (result.deletedCount === 0) {
+            return res.status(500).json({ message: "There has errors while deleting recipe with ID supplied."});
+        } else {
+            return res.status(200).json({ message: "Delete recipe successfully."});
+        }
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
