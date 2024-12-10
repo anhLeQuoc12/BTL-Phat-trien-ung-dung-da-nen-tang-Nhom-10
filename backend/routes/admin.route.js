@@ -18,10 +18,10 @@ router.route('/group/').post(auth, userGroupManagementController.createUserGroup
 router.route('/group/:userGroupId').patch(auth, userGroupManagementController.updateUserGroupById);
 router.route('/group/:userGroupId').delete(auth, userGroupManagementController.deleteUserGroupById);
 
-router.route('/category/').get(auth, categoryManagementController.getAllCategories);
-router.route('/category/').post(auth, categoryManagementController.createCategory);
-router.route('/category/:categoryId').patch(auth, categoryManagementController.updateCategoryById);
-router.route('/category/:categoryId').delete(auth, categoryManagementController.deleteCategoryById);
+router.route('/category/').get(auth, checkIsAdminOrNotMiddleware, categoryManagementController.getAllCategories);
+router.route('/category/').post(auth, checkIsAdminOrNotMiddleware, categoryManagementController.createCategory);
+router.route('/category/:categoryId').patch(auth, checkIsAdminOrNotMiddleware, categoryManagementController.updateCategoryById);
+router.route('/category/:categoryId').delete(auth, checkIsAdminOrNotMiddleware, categoryManagementController.deleteCategoryById);
 
 router.route('/unit/').get(auth, unitManagementController.getAllUnits);
 router.route('/unit/').post(auth, unitManagementController.createUnit);

@@ -1,6 +1,21 @@
 const { Schema, model, SchemaTypes } = require("mongoose");
 const User = require("./user.model");
 const Food = require("./food");
+const Unit = require("./unit.model");
+
+const ingredientSchema = new Schema({
+    foodId: {
+        type: SchemaTypes.ObjectId,
+        ref: Food,
+        required: true
+    },
+    quantity: {
+        type: Number,
+        required: true
+    }
+}, {
+    _id: false
+})
 
 const recipeSchema = new Schema({
     userId: {
@@ -12,17 +27,7 @@ const recipeSchema = new Schema({
         type: String,
         required: true
     },
-    ingredients: [{
-        foodId: {
-            type: SchemaTypes.ObjectId,
-            ref: Food,
-            required: true
-        },
-        quantity: {
-            type: Number,
-            required: true
-        }
-    }],
+    ingredients: [ingredientSchema],
     content: [String],
     description: [String],
 }, { timestamps: true })

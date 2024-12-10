@@ -10,7 +10,8 @@ const getAllCategories = async () => {
 };
 
 const createCategory = async (createBody) => {
-  await CategoryModel.create(createBody);
+  const category = await CategoryModel.create(createBody);
+  return category;
 };
 
 const updateCategoryById = async ({ updateBody, categoryId }) => {

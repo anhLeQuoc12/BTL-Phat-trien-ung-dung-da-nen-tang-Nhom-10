@@ -7,11 +7,11 @@ const foodSchema = new Schema({
         type: String,
         required: true
     },
-    unitsIds: [{
+    unitId: {
         type: SchemaTypes.ObjectId,
         ref: Unit,
         required: true
-    }],
+    },
     categoryId: {
         type: SchemaTypes.ObjectId,
         ref: Category,

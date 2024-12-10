@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGODB_URL)
     console.log(error);
 })
 
-app.use("/admin", adminRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/recipe", recipeRoutes);
 // app.use("/api/report-by-weeks", weeklyShoppingReportRoutes)
 app.use("/api/mealPlan", mealPlanRoutes);

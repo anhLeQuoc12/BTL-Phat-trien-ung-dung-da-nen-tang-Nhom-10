@@ -6,14 +6,23 @@ async function createRecipe(req, res) {
     const userId = res.locals.userId;
 
     try {
-        const newRecipe = await Recipe.create({
-            userId: userId,
-            name: name,
-            ingredients: ingredients,
-            content: content,
-            description: description,
-        });
-        return res.status(201).json(newRecipe);
+        const alreadyExistedRecipe = await Recipe.findOne({
+            name: name
+        }).exec();
+
+        if (alreadyExistedRecipe) {
+            return res.status(400).json({ message: "Recipe with name " + name + " has already existed." });
+        } else {
+            const newRecipe = await Recipe.create({
+                userId: userId,
+                name: name,
+                ingredients: ingredients,
+                content: content,
+                description: description,
+            });
+            return res.status(201).json(newRecipe);
+        }
+        
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -40,7 +49,14 @@ async function getRecipeById(req, res) {
         const recipe = await Recipe.findOne({
             _id: new ObjectId(recipeId),
             userId: userId
-        }).populate("ingredients.foodId").exec();
+        }).populate({
+            path: "ingredients.foodId",
+            select: "name unitId",
+            populate: {
+                path: "unitId",
+                select: "name"
+            }
+        }).exec();
         if (recipe) {
             return res.status(200).json(recipe);
         } else {
@@ -116,7 +132,7 @@ async function connectRecipeWithFridge(req, res) {
         const recipe = await Recipe.findOne({
             _id: new ObjectId(recipeId),
             userId: userId
-        }).populate("ingredients.food").exec();
+        }).populate("ingredients.foodId").exec();
         const fridge = await Fridge.findOne({
             userId: userId
         }).exec();

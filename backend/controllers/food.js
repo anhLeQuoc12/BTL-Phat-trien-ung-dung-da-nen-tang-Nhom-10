@@ -2,16 +2,25 @@ const Food = require("../models/food");
 const ObjectId = require("mongodb").ObjectId;
 
 async function createFood(req, res) {
-    const { name, unitsIds, categoryId, imageUrl } = req.body;
+    const { name, unitId, categoryId, imageUrl } = req.body;
 
     try {
-        const newFood = await Food.create({
-            name: name,
-            unitsIds: unitsIds,
-            categoryId: categoryId,
-            imageUrl: imageUrl
-        });
-        return res.status(201).json(newFood);
+        const alreadyExistedFood = await Food.findOne({
+            name: name
+        }).exec();
+
+        if (alreadyExistedFood) {
+            return res.status(400).json({ message: "Food with name " + name + " has already existed." });
+
+        } else {
+            const newFood = await Food.create({
+                name: name,
+                unitId: unitId,
+                categoryId: categoryId,
+                imageUrl: imageUrl
+            });
+            return res.status(201).json(newFood);
+        }
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -19,7 +28,10 @@ async function createFood(req, res) {
 
 async function getAllFoods(req, res) {
     try {
-        const foods = await Food.find({}).exec();
+        const foods = await Food.find({})
+        .populate("unitId", "name")
+        .populate("categoryId", "name")
+        .exec();
         return res.status(200).json(foods);
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -32,7 +44,9 @@ async function getFoodById(req, res) {
     try {
         const food = await Food.findOne({
             _id: new ObjectId(foodId),
-        }).populate("unitsIds categoryId").exec();
+        }).populate("unitId", "name")
+        .populate("categoryId", "name")
+        .exec();
         if (food) {
             return res.status(200).json(food);
         } else {
@@ -45,18 +59,18 @@ async function getFoodById(req, res) {
 
 async function updateFoodById(req, res) {
     const foodId = req.params.id;
-    const { newName, newUnitsIds, newCategoryId, newImageUrl } = req.body;
+    const { newName, newUnitId, newCategoryId, newImageUrl } = req.body;
 
-    if (!newName && !newUnitsIds && !newCategoryId && !newImageUrl) {
-        return res.json({ message: "Updating food needs at least 1 of 4 following information: newName, newUnitsIds, newCategoryId or newImageUrl." });
+    if (!newName && !newUnitId && !newCategoryId && !newImageUrl) {
+        return res.json({ message: "Updating food needs at least 1 of 4 following information: newName, newUnitId, newCategoryId or newImageUrl." });
     }
 
     const updateObject = {};
     if (newName) {
         updateObject.name = newName;
     }
-    if (newUnitsIds) {
-        updateObject.unitsIds = newUnitsIds;
+    if (newUnitId) {
+        updateObject.unitId = newUnitId;
     }
     if (newCategoryId) {
         updateObject.categoryId = newCategoryId;

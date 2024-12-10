@@ -1,9 +1,10 @@
-const {Schema, model} = require('mongoose');
+const {Schema, model, SchemaTypes} = require('mongoose');
 const Recipe = require('./recipe');
+const User = require('./user.model');
 
 const mealPlanSchema = new Schema({
     userId: {
-        type: ObjectId,
+        type: SchemaTypes.ObjectId,
         ref: User,
         required: true
     },
@@ -17,7 +18,7 @@ const mealPlanSchema = new Schema({
     },
     recipes: [{
         recipeId: {
-            type: ObjectId,
+            type: SchemaTypes.ObjectId,
             ref: Recipe,
         }
     }],
