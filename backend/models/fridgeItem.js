@@ -64,7 +64,7 @@ const fridgeSchema = new mongoose.Schema({
 	},
 	userId: {
 		type: SchemaTypes.ObjectId,
-		ref: User,
+		ref: "User",
 		required: true
 	},
 	items: {

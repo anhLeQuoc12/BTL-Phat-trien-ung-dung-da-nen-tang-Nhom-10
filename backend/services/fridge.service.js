@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 const { FridgeItem, Fridge } = require('../models/fridgeItem');
 
+const createFridge = async (userId) => {
+	try {
+		const newFridge = await Fridge.create({userId: userId});
+	} catch (error) {
+		throw new Error(`Error creating new fridge: ${error.message}`);
+	}
+}
+
 const createFridgeItem = async (data, userId) => {
 	const { food, quantity, expirationDate, storageLocation } = data;
 
@@ -118,5 +126,6 @@ module.exports = {
 	createFridgeItem,
 	updateFridgeItemById,
 	deleteFridgeItemById,
-	markItemUsed
+	markItemUsed,
+	createFridge
 };
