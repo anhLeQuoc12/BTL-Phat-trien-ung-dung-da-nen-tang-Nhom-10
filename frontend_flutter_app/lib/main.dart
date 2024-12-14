@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
-import 'package:frontend_flutter_app/pages/fridge.dart';
-import 'package:frontend_flutter_app/pages/login.dart';
-import 'package:frontend_flutter_app/pages/meals-plan.dart';
-import 'package:frontend_flutter_app/pages/recipe.dart';
-import 'package:frontend_flutter_app/pages/report.dart';
-import 'package:frontend_flutter_app/pages/search.dart';
-import 'package:frontend_flutter_app/pages/shopping-list.dart';
+import 'package:frontend_flutter_app/ui/fridge/fridge.dart';
+import 'package:frontend_flutter_app/ui/login/login.dart';
+import 'package:frontend_flutter_app/ui/meals-plan/meals-plan.dart';
+import 'package:frontend_flutter_app/ui/recipe/recipe.dart';
+import 'package:frontend_flutter_app/ui/report/report.dart';
+import 'package:frontend_flutter_app/ui/search/search.dart';
+import 'package:frontend_flutter_app/ui/shopping-list/shopping-list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,13 +34,13 @@ class MyApp extends StatelessWidget {
       initialRoute: initialRoute,  
       routes: {
         "/": (context) => MyHomePage(title: "Ứng dụng đi chợ tiện lợi"),
-        "/login": (context) => LoginPage(),
-        "/shopping-list": (context) => ShoppingListPage(),
-        "/meals-plan": (context) => MealsPlanPage(),
-        "/fridge": (context) => FridgePage(),
-        "/recipe": (context) => RecipePage(),
-        "/search": (context) => SearchPage(),
-        "/report": (context) => ReportPage()
+        "/login": (context) => LoginScreen(),
+        "/shopping-list": (context) => ShoppingListScreen(),
+        "/meals-plan": (context) => MealsPlanScreen(),
+        "/fridge": (context) => FridgeScreen(),
+        "/recipe": (context) => RecipeScreen(),
+        "/search": (context) => SearchScreen(),
+        "/report": (context) => ReportScreen()
       },
     );
   }

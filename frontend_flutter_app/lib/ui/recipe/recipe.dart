@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ReportPage extends StatelessWidget {
+class RecipeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Thống kê, báo cáo"),
+        title: Text("Công thức nấu ăn"),
       ),
       body: Center(
-        child: Text("Trang Thống kê, báo cáo"),
+        child: Text("Trang công thức nấu ăn"),
       ),
     );
   }
