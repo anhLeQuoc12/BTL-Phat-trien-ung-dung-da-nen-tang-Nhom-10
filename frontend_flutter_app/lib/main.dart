@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
+import 'package:frontend_flutter_app/ui/app-bar.dart';
+import 'package:frontend_flutter_app/ui/drawer.dart';
 import 'package:frontend_flutter_app/ui/fridge/fridge.dart';
 import 'package:frontend_flutter_app/ui/login/login.dart';
 import 'package:frontend_flutter_app/ui/meals-plan/meals-plan.dart';
-import 'package:frontend_flutter_app/ui/recipe/recipe.dart';
+import 'package:frontend_flutter_app/ui/recipe/recipes-list.dart';
 import 'package:frontend_flutter_app/ui/report/report.dart';
 import 'package:frontend_flutter_app/ui/search/search.dart';
 import 'package:frontend_flutter_app/ui/shopping-list/shopping-list.dart';
@@ -12,10 +14,9 @@ import 'package:frontend_flutter_app/ui/user/change-password/change-password.dar
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // final bool isLoggedIn = await Auth.authenticate();
-  bool isLoggedIn = true;
+  final bool isLoggedIn = await Auth.authenticate();
   final MyApp myApp = MyApp(
-    initialRoute: isLoggedIn ? "/" : "/login",
+    initialRoute: isLoggedIn ? "/home" : "/login",
   );
   runApp(myApp);
 }
@@ -35,12 +36,12 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: initialRoute,
       routes: {
-        "/": (context) => MyHomePage(title: "Ứng dụng đi chợ tiện lợi"),
+        "/home": (context) => MyHomePage(title: "Ứng dụng đi chợ tiện lợi"),
         "/login": (context) => LoginScreen(),
         "/shopping-list": (context) => ShoppingListScreen(),
         "/meals-plan": (context) => MealsPlanScreen(),
         "/fridge": (context) => FridgeScreen(),
-        "/recipe": (context) => RecipeScreen(),
+        "/recipe": (context) => RecipesListScreen(),
         "/search": (context) => SearchScreen(),
         "/report": (context) => ReportScreen(),
         "/user/change-info": (context) => ChangeInfoScreen(),
@@ -76,113 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-        actions: <Widget>[
-          PopupMenuButton<UserAccountOptions>(
-            icon: Icon(Icons.account_circle),
-            onSelected: (option) => {
-              setState(() {
-                selectedOption = option;
-              })
-            },
-            itemBuilder: (context) => <PopupMenuEntry<UserAccountOptions>>[
-              PopupMenuItem(
-                value: UserAccountOptions.changeInfo,
-                child: Text("Thay đổi thông tin tài khoản"),
-                onTap: () {
-                  Navigator.pushNamed(context, "/user/change-info");
-                },
-              ),
-              PopupMenuItem(
-                value: UserAccountOptions.changePassword,
-                child: Text("Đổi mật khẩu"),
-                onTap: () {
-                  Navigator.pushNamed(context, "/user/change-password");
-                },
-              ),
-              const PopupMenuItem(
-                value: UserAccountOptions.logOut,
-                child: Text("Đăng xuất"),
-              ),
-            ],
-          )
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              height: 25,
-            ),
-            ListTile(
-              leading: Image(
-                image: AssetImage("assets/grocery-cart.png"),
-                width: 40,
-                height: 40,
-              ),
-              title: Text("Danh sách mua sắm"),
-              onTap: () => {Navigator.pushNamed(context, "/shopping-list")},
-            ),
-            ListTile(
-              leading: Image(
-                image: AssetImage("assets/fried-rice.png"),
-                width: 40,
-                height: 40,
-              ),
-              title: Text("Dự định bữa ăn"),
-              onTap: () => {Navigator.pushNamed(context, "/meals-plan")},
-            ),
-            ListTile(
-              leading: Image(
-                image: AssetImage("assets/fridge.png"),
-                width: 40,
-                height: 40,
-              ),
-              title: Text("Quản lý tủ lạnh"),
-              onTap: () => {Navigator.pushNamed(context, "/fridge")},
-            ),
-            ListTile(
-              leading: Image(
-                image: AssetImage("assets/recipe.png"),
-                width: 40,
-                height: 40,
-              ),
-              title: Text("Công thức nấu ăn"),
-              onTap: () => {Navigator.pushNamed(context, "/recipe")},
-            ),
-            ListTile(
-              leading: Image(
-                image: AssetImage("assets/search.png"),
-                width: 40,
-                height: 40,
-              ),
-              title: Text("Tìm kiếm thực phẩm"),
-              onTap: () => {Navigator.pushNamed(context, "/search")},
-            ),
-            ListTile(
-              leading: Image(
-                image: AssetImage("assets/pie-chart.png"),
-                width: 40,
-                height: 40,
-              ),
-              title: Text("Thống kê, báo cáo"),
-              onTap: () => {Navigator.pushNamed(context, "/report")},
-            ),
-          ],
-        ),
-      ),
+      appBar: MyAppBar(title: widget.title),
+      drawer: const MyAppDrawer(),
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           const Expanded(
+            flex: 2,
             child: Image(
                 image: AssetImage(
-                    "assets/icon-image-ud-di-cho-tien-loi-removebg-preview.png")),
-            flex: 2,
+                    "assets/icon-image-ud-di-cho-tien-loi.png")),
           ),
           Expanded(
             flex: 4,

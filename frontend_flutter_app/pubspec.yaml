@@ -56,7 +56,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/icon-image-ud-di-cho-tien-loi.png
-    - assets/icon-image-ud-di-cho-tien-loi-removebg-preview.png
+    - assets/home.png
     - assets/grocery-cart.png
     - assets/fried-rice.png
     - assets/fridge.png
