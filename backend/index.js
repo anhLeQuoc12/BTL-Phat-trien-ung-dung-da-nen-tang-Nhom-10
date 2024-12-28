@@ -10,11 +10,13 @@ const mealPlanRoutes = require("./routes/mealPlan");
 const mealSuggestRoutes = require("./routes/mealSuggest");
 // const weeklyShoppingReportRoutes = require("./routes/weekly-shopping-report");
 const { default: mongoose } = require("mongoose");
+const cors = require('cors');
 
 const app = express();
 dotenv.config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 mongoose.connect(process.env.MONGODB_URL)
 .then(() => {
