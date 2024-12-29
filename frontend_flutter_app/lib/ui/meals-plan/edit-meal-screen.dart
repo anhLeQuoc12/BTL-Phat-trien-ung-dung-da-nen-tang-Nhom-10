@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EditMealScreen extends StatefulWidget {
-  final String mealTime; // Bữa trong ngày (sáng, trưa, tối)
-  final List<String> dishes; // Danh sách món ăn
+  final String mealTime;
+  final List<dynamic> dishes;
 
   const EditMealScreen({super.key, required this.mealTime, required this.dishes});
 
@@ -11,24 +11,22 @@ class EditMealScreen extends StatefulWidget {
 }
 
 class _EditMealScreenState extends State<EditMealScreen> {
-  late String _selectedMealTime; // Lựa chọn bữa trong ngày
-  late List<String> _dishes; // Danh sách món ăn
+  late String _selectedMealTime;
+  late List<dynamic> _dishes;
 
   @override
   void initState() {
     super.initState();
     _selectedMealTime = widget.mealTime;
-    _dishes = List<String>.from(widget.dishes);
+    _dishes = List<dynamic>.from(widget.dishes);
   }
 
-  // Hàm thêm món ăn mới
   void _addDish() {
     setState(() {
       _dishes.add('Món mới ${_dishes.length + 1}');
     });
   }
 
-  // Hàm xóa món ăn
   void _deleteDish(int index) {
     setState(() {
       _dishes.removeAt(index);
@@ -46,7 +44,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
             Navigator.pop(context, {
               'mealTime': _selectedMealTime,
               'dishes': _dishes,
-            }); // Trả dữ liệu về màn hình trước
+            });
           },
         ),
       ),
@@ -61,10 +59,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
             ),
             DropdownButton<String>(
               value: _selectedMealTime,
-              items: const [
-                DropdownMenuItem(value: 'Sáng', child: Text('Sáng')),
-                DropdownMenuItem(value: 'Trưa', child: Text('Trưa')),
-                DropdownMenuItem(value: 'Tối', child: Text('Tối')),
+              items: [
+                DropdownMenuItem(value: _selectedMealTime, child: Text(_selectedMealTime)),
+                if (_selectedMealTime != 'Sáng') const DropdownMenuItem(value: 'Sáng', child: Text('Sáng')),
+                if (_selectedMealTime != 'Trưa') const DropdownMenuItem(value: 'Trưa', child: Text('Trưa')),
+                if (_selectedMealTime != 'Tối') const DropdownMenuItem(value: 'Tối', child: Text('Tối')),
               ],
               onChanged: (value) {
                 setState(() {
@@ -74,19 +73,38 @@ class _EditMealScreenState extends State<EditMealScreen> {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Danh sách món ăn:',
+              'Các món ăn dự định:', // Thay đổi text
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Expanded(
-              child: ListView.builder(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // Hai cột
+                  childAspectRatio: 2 / 1, // Điều chỉnh tỷ lệ khung hình của ô
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
                 itemCount: _dishes.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: const Icon(Icons.food_bank),
-                    title: Text(_dishes[index]),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _deleteDish(index),
+                  final dish = _dishes[index];
+                  return Card( // Sử dụng Card để tạo hiệu ứng nổi
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Text(
+                            dish is String ? dish : dish.toString(),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                            onPressed: () => _deleteDish(index),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -96,7 +114,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: _addDish,
-                child: const Text('Add Dish'),
+                child: const Text('Thêm món'), // Thay đổi text
               ),
             ),
           ],

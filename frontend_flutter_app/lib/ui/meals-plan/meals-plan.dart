@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/ui/meals-plan/edit-meal-screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert'; // Thư viện JSON
 import 'package:http/http.dart' as http;
@@ -10,7 +11,7 @@ class MealsPlanScreen extends StatefulWidget {
 
 class _MealPlanScreenState extends State<MealsPlanScreen> {
   // Danh sách các bữa ăn
-  List<String> _meals = [];
+  List<Map<String, dynamic>> _meals = []; // Lưu trữ tên bữa ăn và danh sách món ăn
   String? _lastSavedDate; // Thời gian lưu lần cuối
 
   @override
@@ -47,9 +48,12 @@ class _MealPlanScreenState extends State<MealsPlanScreen> {
     try {
       final response = await http.get(Uri.parse('https://api.example.com/meals'));
       if (response.statusCode == 200) {
-        final List<String> meals = List<String>.from(json.decode(response.body));
+        final List<dynamic> mealsData = json.decode(response.body);
         setState(() {
-          _meals = meals;
+          _meals = mealsData.map((meal) => {
+            'mealTime': meal['mealTime'],
+            'dishes': List<dynamic>.from(meal['dishes']), // Thay đổi kiểu dữ liệu thành List<dynamic>
+          }).toList();
         });
       } else {
         throw Exception('Failed to load data');
@@ -119,7 +123,7 @@ class _MealPlanScreenState extends State<MealsPlanScreen> {
   // Thêm bữa ăn
   void _addMeal() {
     setState(() {
-      _meals.add('Bữa mới ${_meals.length + 1}');
+      _meals.add({'mealTime': 'Bữa mới ${_meals.length + 1}', 'dishes': []});
     });
   }
 
@@ -128,6 +132,28 @@ class _MealPlanScreenState extends State<MealsPlanScreen> {
     setState(() {
       _meals.removeAt(index);
     });
+  }
+
+  // Chỉnh sửa bữa ăn
+  void _editMeal(int index) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditMealScreen(
+          mealTime: _meals[index]['mealTime'],
+          dishes: _meals[index]['dishes'],
+        ),
+      ),
+    );
+
+    if (result != null && result is Map<String, dynamic>) {
+      setState(() {
+        _meals[index] = {
+          'mealTime': result['mealTime'],
+          'dishes': result['dishes'],
+        };
+      });
+    }
   }
 
   @override
@@ -150,8 +176,9 @@ class _MealPlanScreenState extends State<MealsPlanScreen> {
               itemCount: _meals.length,
               itemBuilder: (context, index) {
                 return MealItem(
-                  mealTime: _meals[index],
+                  mealTime: _meals[index]['mealTime'],
                   onDelete: () => _deleteMeal(index),
+                  onTap: () => _editMeal(index), // Sửa lỗi gọi hàm _editMeal
                 );
               },
             ),
@@ -179,42 +206,51 @@ class _MealPlanScreenState extends State<MealsPlanScreen> {
 class MealItem extends StatelessWidget {
   final String mealTime;
   final VoidCallback onDelete;
+  final VoidCallback onTap; // Thêm callback khi nhấn vào item
 
-  const MealItem({super.key, required this.mealTime, required this.onDelete});
+  const MealItem({
+    super.key,
+    required this.mealTime,
+    required this.onDelete,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            mealTime,
-            style: const TextStyle(fontSize: 16),
-          ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'delete') {
-                onDelete();
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem(
-                  value: 'delete',
-                  child: Text('Delete'),
-                ),
-              ];
-            },
-            icon: const Icon(Icons.more_vert),
-          ),
-        ],
+    return GestureDetector(
+      onTap: onTap, // Kích hoạt callback khi nhấn
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              mealTime,
+              style: const TextStyle(fontSize: 16),
+            ),
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'delete') {
+                  onDelete();
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Text('Delete'),
+                  ),
+                ];
+              },
+              icon: const Icon(Icons.more_vert),
+            ),
+          ],
+        ),
       ),
     );
   }
