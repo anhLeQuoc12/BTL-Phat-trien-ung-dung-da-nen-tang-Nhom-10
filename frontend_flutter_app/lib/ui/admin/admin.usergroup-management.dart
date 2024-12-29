@@ -185,6 +185,7 @@ class _EditUserGroupPageState extends State<EditUserGroupPage> {
   Future<void> updateUserGroup() async {
     if (nameController.text.trim().isEmpty) {
       HotMessage.showToast('Lỗi', 'Tên nhóm người dùng không được để trống');
+      return;
     }
     try {
       var token = await Auth.getAccessToken();
@@ -343,6 +344,7 @@ class _CreateUserGroupPageState extends State<CreateUserGroupPage> {
   Future<void> createUserGroup() async {
     if (nameController.text.trim().isEmpty) {
       HotMessage.showToast('Lỗi', 'Tên nhóm người dùng không được để trống');
+      return;
     }
     try {
       var token = await Auth.getAccessToken();

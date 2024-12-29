@@ -185,6 +185,7 @@ class _EditUnitPageState extends State<EditUnitPage> {
   Future<void> updateUnit() async {
     if (nameController.text.trim().isEmpty) {
       HotMessage.showToast('Lỗi', 'Tên đơn vị không được để trống');
+      return;
     }
     try {
       var token = await Auth.getAccessToken();
@@ -343,6 +344,7 @@ class _CreateUnitPageState extends State<CreateUnitPage> {
   Future<void> createUnit() async {
     if (nameController.text.trim().isEmpty) {
       HotMessage.showToast('Lỗi', 'Tên đơn vị không được để trống');
+      return;
     }
     try {
       var token = await Auth.getAccessToken();

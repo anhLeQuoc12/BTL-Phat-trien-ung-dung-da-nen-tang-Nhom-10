@@ -196,6 +196,18 @@ class _EditUserPageState extends State<EditUserPage> {
   }
 
   Future<void> updateUser() async {
+    if (nameController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên người dùng không được để trống');
+      return;
+    }
+    if (emailController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên người dùng không được để trống');
+      return;
+    }
+    if (phoneController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên người dùng không được để trống');
+      return;
+    }
     try {
       var token = await Auth.getAccessToken();
       var updateBody = {

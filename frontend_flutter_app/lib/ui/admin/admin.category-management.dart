@@ -210,6 +210,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
   Future<void> updateCategory() async {
     if (nameController.text.trim().isEmpty) {
       HotMessage.showToast('Lỗi', 'Tên danh mục không được để trống');
+      return;
     }
     try {
       var token = await Auth.getAccessToken();
