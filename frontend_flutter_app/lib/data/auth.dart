@@ -19,20 +19,21 @@ class Auth {
     }
   }
 
-  static Future<bool> authenticate() async {
+  static Future<dynamic> authenticate() async {
     await getAccessToken();
     if (accessToken.isEmpty) {
       print("not authenticated");
-      return false;
+      return "Not authenticated";
     } else {
       final res = await http.get(Uri.parse("http://10.0.2.2:1000/api/auth"),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
       if (res.statusCode == 200) {
         print("authenticated");
-        return true;
+        final result = jsonDecode(res.body);
+        return result;
       } else {
         print("not authenticated");
-        return false;
+        return "Not authenticated";
       }
     }
   }

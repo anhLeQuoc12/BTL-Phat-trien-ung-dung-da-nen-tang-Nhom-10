@@ -71,19 +71,22 @@ async function createWeeklyReport(userId, startDate, endDate) {
 }
 
 async function getWeeklyReport(req, res) {
-    const { startDate, endDate } = req.body;
+    const { startDate, endDate } = req.query;
     const userId = res.locals.userId;
 
     try {
+        const startDateInDate = new Date(startDate);
+        const endDateInDate = new Date(endDate);
+        endDateInDate.setHours(23, 59, 59);
         let weeklyReport;
-        if (startDate + 7 * 24 * 3600 * 1000 - 1 === endDate) {
+        // if (startDate + 7 * 24 * 3600 * 1000 - 1 === endDate) {
             weeklyReport = await WeeklyShoppingReport.findOne({
-                startDate: startDate,
-                endDate: endDate
-            })
-        } else {
-            weeklyReport = await createWeeklyReport(userId, startDate, endDate);
-        }
+                startDate: startDateInDate,
+                endDate: endDateInDate
+            }).exec();
+        // } else {
+        //     weeklyReport = await createWeeklyReport(userId, startDate, endDate);
+        // }
 
         if (weeklyReport) {
             return res.status(200).json(weeklyReport);
@@ -91,7 +94,7 @@ async function getWeeklyReport(req, res) {
             return res.status(400).json({ message: "There has errors while processing in server."});
         }
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 

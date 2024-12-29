@@ -32,8 +32,17 @@ router.post('/logout', (req, res) => {
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
-router.get("/", authMiddleware, (req, res) => {
-    return res.status(200).json({ message: "User is authenticated."});
+router.get("/", authMiddleware, async (req, res) => {
+    const userId = res.locals.userId;
+    try {
+        const requestedAccount = await User.findOne({
+            _id: userId
+        }, "role");
+        return res.status(200).json({ role: requestedAccount.role, message: "User is authenticated."});
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json( {message: "There has errors while retrieving user account's role!"} );
+    }
 })
 
 module.exports = router;
