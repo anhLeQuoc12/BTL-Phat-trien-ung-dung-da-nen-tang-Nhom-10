@@ -84,18 +84,42 @@ class _CategoryManagementPageState extends State<CategoryManagementPage> {
           Container(
             color: Colors.purple.shade50,
             padding: EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Tìm danh mục',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Tìm danh mục',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                  ),
                 ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+                SizedBox(width: 8.0),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateCategoryPage(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(fontSize: 16),
+                    backgroundColor: Colors.red, // Background color
+                    foregroundColor: Colors.white, // Text color
+                  ),
+                  icon: Icon(Icons.add, size: 20), // Add your desired icon here
+                  label: Text('Thêm danh mục'), // Text for the button
+                ),
+              ],
             ),
           ),
 
@@ -184,6 +208,9 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
   }
 
   Future<void> updateCategory() async {
+    if (nameController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên danh mục không được để trống');
+    }
     try {
       var token = await Auth.getAccessToken();
       var updateBody = {
@@ -196,13 +223,14 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
           "Content-type": "application/json; charset=UTF-8",
           "Authorization": "Bearer $token"
         },
-        body: json.encode({'updateBody': updateBody}),
+        body: json.encode(updateBody),
       );
 
       if (response.statusCode == 200) {
+        HotMessage.showToast('Thành công', 'Cập nhật danh mục thành công');
         Navigator.pop(context);
       } else {
-        print('Lỗi');
+        HotMessage.showToast('Lỗi', 'Cập nhật danh mục thành công');
       }
     } catch (e) {
       if (e is http.ClientException) {
@@ -226,9 +254,10 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
       );
 
       if (response.statusCode == 200) {
+        HotMessage.showToast('Thành công', 'Xoá danh mục thành công');
         Navigator.pop(context);
       } else {
-        print('Lỗi');
+        HotMessage.showToast('Lỗi', 'Xoá danh mục thành công');
       }
     } catch (e) {
       if (e is http.ClientException) {
@@ -277,14 +306,135 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
               SizedBox(height: 16),
 
               ElevatedButton(
-                onPressed: deleteCategory,
+                onPressed: () async {
+                  bool? confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Xác nhận'),
+                        content: Text(
+                            'Bạn có chắc chắn muốn xoá danh mục này không?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false); // User canceled
+                            },
+                            child: Text('Huỷ'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true); // User confirmed
+                            },
+                            child: Text('Xác nhận'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (confirm == true) {
+                    await deleteCategory();
+                  }
+                },
                 style: ElevatedButton.styleFrom(
-                  textStyle:
-                      TextStyle(fontSize: 16), // Optional: customize text style
+                  textStyle: TextStyle(fontSize: 16),
                   backgroundColor: Colors.red, // Background color
                   foregroundColor: Colors.white, // Text color
                 ),
                 child: Text('Xoá danh mục'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CreateCategoryPage extends StatefulWidget {
+  const CreateCategoryPage({super.key});
+
+  @override
+  State<CreateCategoryPage> createState() => _CreateCategoryPageState();
+}
+
+class _CreateCategoryPageState extends State<CreateCategoryPage> {
+  // Form controllers
+  final TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> createCategory() async {
+    if (nameController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên danh mục không được để trống');
+      return;
+    }
+    try {
+      var token = await Auth.getAccessToken();
+      var createBody = {
+        'name': nameController.text,
+      };
+      final response = await http.post(
+        Uri.http(AppConstant.baseUrl, '/api/admin/category'),
+        headers: <String, String>{
+          "Content-type": "application/json; charset=UTF-8",
+          "Authorization": "Bearer $token"
+        },
+        body: json.encode(createBody),
+      );
+
+      if (response.statusCode == 201) {
+        HotMessage.showToast('Thành công', 'Tạo danh mục thành công');
+        Navigator.pop(context);
+      } else {
+        HotMessage.showToast('Lỗi', 'Xảy ra lỗi khi tạo danh mục');
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        throw Exception('Client error: ${e.message}');
+      } else {
+        throw Exception('An error occurred: $e');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Tạo danh mục mới'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          child: Column(
+            children: [
+              // Name Field
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Tên danh mục',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () => nameController.clear(),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+
+              // Save Button
+              ElevatedButton(
+                onPressed: createCategory,
+                style: ElevatedButton.styleFrom(
+                  textStyle:
+                      TextStyle(fontSize: 16), // Optional: customize text style
+                  backgroundColor: Colors.purple, // Background color
+                  foregroundColor: Colors.white, // Text color
+                ),
+                child: Text('Tạo danh mục'),
               ),
             ],
           ),

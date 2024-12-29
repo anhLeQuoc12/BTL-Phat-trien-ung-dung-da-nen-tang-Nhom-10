@@ -108,7 +108,7 @@ class _UnitManagementPageState extends State<UnitManagementPage> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Lỗi: ${snapshot.error}'));
                 } else if (_filteredUnits.isEmpty) {
-                  return Center(child: Text('Không tìm thấy danh mục'));
+                  return Center(child: Text('Không tìm thấy đơn vị'));
                 } else {
                   return ListView.builder(
                     itemCount: _filteredUnits.length,
@@ -183,6 +183,9 @@ class _EditUnitPageState extends State<EditUnitPage> {
   }
 
   Future<void> updateUnit() async {
+    if (nameController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên đơn vị không được để trống');
+    }
     try {
       var token = await Auth.getAccessToken();
       var updateBody = {
@@ -198,9 +201,10 @@ class _EditUnitPageState extends State<EditUnitPage> {
       );
 
       if (response.statusCode == 200) {
+        HotMessage.showToast('Thành công', 'Cập nhật đơn vị thành công');
         Navigator.pop(context);
       } else {
-        print('Lỗi');
+        HotMessage.showToast('Lỗi', 'Cập nhật đơn vị thành công');
       }
     } catch (e) {
       if (e is http.ClientException) {
@@ -223,9 +227,10 @@ class _EditUnitPageState extends State<EditUnitPage> {
       );
 
       if (response.statusCode == 200) {
+        HotMessage.showToast('Thành công', 'Xoá đơn vị thành công');
         Navigator.pop(context);
       } else {
-        print('Lỗi');
+        HotMessage.showToast('Lỗi', 'Xoá đơn vị thành công');
       }
     } catch (e) {
       if (e is http.ClientException) {
@@ -240,7 +245,7 @@ class _EditUnitPageState extends State<EditUnitPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sửa thông tin danh mục'),
+        title: Text('Sửa thông tin đơn vị'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -251,7 +256,7 @@ class _EditUnitPageState extends State<EditUnitPage> {
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: 'Tên danh mục',
+                  labelText: 'Tên đơn vị',
                   suffixIcon: IconButton(
                     icon: Icon(Icons.close),
                     onPressed: () => nameController.clear(),
@@ -274,14 +279,134 @@ class _EditUnitPageState extends State<EditUnitPage> {
               SizedBox(height: 16),
 
               ElevatedButton(
-                onPressed: deleteUnit,
+                onPressed: () async {
+                  bool? confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Xác nhận'),
+                        content:
+                            Text('Bạn có chắc chắn muốn xoá đơn vị này không?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false); // User canceled
+                            },
+                            child: Text('Huỷ'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true); // User confirmed
+                            },
+                            child: Text('Xác nhận'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (confirm == true) {
+                    await deleteUnit();
+                  }
+                },
                 style: ElevatedButton.styleFrom(
-                  textStyle:
-                      TextStyle(fontSize: 16), // Optional: customize text style
+                  textStyle: TextStyle(fontSize: 16),
                   backgroundColor: Colors.red, // Background color
                   foregroundColor: Colors.white, // Text color
                 ),
-                child: Text('Xoá danh mục'),
+                child: Text('Xoá đơn vị'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CreateUnitPage extends StatefulWidget {
+  const CreateUnitPage({super.key});
+
+  @override
+  State<CreateUnitPage> createState() => _CreateUnitPageState();
+}
+
+class _CreateUnitPageState extends State<CreateUnitPage> {
+  // Form controllers
+  final TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> createUnit() async {
+    if (nameController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên đơn vị không được để trống');
+    }
+    try {
+      var token = await Auth.getAccessToken();
+      var createBody = {
+        'name': nameController.text,
+      };
+      final response = await http.post(
+        Uri.http(AppConstant.baseUrl, '/api/admin/unit'),
+        headers: <String, String>{
+          "Content-type": "application/json; charset=UTF-8",
+          "Authorization": "Bearer $token"
+        },
+        body: json.encode(createBody),
+      );
+
+      if (response.statusCode == 201) {
+        HotMessage.showToast('Thành công', 'Tạo đơn vị thành công');
+        Navigator.pop(context);
+      } else {
+        HotMessage.showToast('Lỗi', 'Xảy ra lỗi khi tạo đơn vị');
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        throw Exception('Client error: ${e.message}');
+      } else {
+        throw Exception('An error occurred: $e');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Tạo đơn vị mới'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          child: Column(
+            children: [
+              // Name Field
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Tên đơn vị',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () => nameController.clear(),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+
+              // Save Button
+              ElevatedButton(
+                onPressed: createUnit,
+                style: ElevatedButton.styleFrom(
+                  textStyle:
+                      TextStyle(fontSize: 16), // Optional: customize text style
+                  backgroundColor: Colors.purple, // Background color
+                  foregroundColor: Colors.white, // Text color
+                ),
+                child: Text('Tạo đơn vị'),
               ),
             ],
           ),
