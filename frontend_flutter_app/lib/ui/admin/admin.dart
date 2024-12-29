@@ -44,8 +44,8 @@ class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
+      appBar: MyAppBar(
+        title: _title,
       ),
       drawer: Drawer(
         child: ListView(
