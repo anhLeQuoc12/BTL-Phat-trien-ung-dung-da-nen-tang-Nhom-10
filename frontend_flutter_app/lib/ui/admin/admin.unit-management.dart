@@ -245,9 +245,7 @@ class _EditUnitPageState extends State<EditUnitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sửa thông tin đơn vị'),
-      ),
+      appBar: MyAppBar(title: 'Sửa thông tin đơn vị'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -378,9 +376,7 @@ class _CreateUnitPageState extends State<CreateUnitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tạo đơn vị mới'),
-      ),
+      appBar: MyAppBar(title: 'Tạo đơn vị mới'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

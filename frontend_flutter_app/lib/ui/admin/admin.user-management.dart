@@ -242,9 +242,7 @@ class _EditUserPageState extends State<EditUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sửa thông tin người dùng'),
-      ),
+      appBar: MyAppBar(title: 'Sửa thông tin người dùng'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -331,24 +329,7 @@ class UserDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chi tiết người dùng'),
-        backgroundColor: Colors.purple,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              // Handle profile icon action
-            },
-          ),
-        ],
-      ),
+      appBar: MyAppBar(title: 'Chi tiết người dùng'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -4,7 +4,8 @@ class UserGroupManagementPage extends StatefulWidget {
   const UserGroupManagementPage({super.key});
 
   @override
-  State<UserGroupManagementPage> createState() => _UserGroupManagementPageState();
+  State<UserGroupManagementPage> createState() =>
+      _UserGroupManagementPageState();
 }
 
 class _UserGroupManagementPageState extends State<UserGroupManagementPage> {
@@ -34,7 +35,8 @@ class _UserGroupManagementPageState extends State<UserGroupManagementPage> {
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        List<UserGroup> usergroups = data.map((json) => UserGroup.fromJson(json)).toList();
+        List<UserGroup> usergroups =
+            data.map((json) => UserGroup.fromJson(json)).toList();
         setState(() {
           _allUserGroups = usergroups;
           _filteredUserGroups = usergroups;
@@ -61,8 +63,8 @@ class _UserGroupManagementPageState extends State<UserGroupManagementPage> {
     String query = _searchController.text.toLowerCase();
     setState(() {
       _filteredUserGroups = _allUserGroups
-          .where(
-              (usergroup) => usergroup.name.toLowerCase().contains(query)) // Filter logic
+          .where((usergroup) =>
+              usergroup.name.toLowerCase().contains(query)) // Filter logic
           .toList();
     });
   }
@@ -193,7 +195,8 @@ class _EditUserGroupPageState extends State<EditUserGroupPage> {
         'name': nameController.text,
       };
       final response = await http.patch(
-        Uri.http(AppConstant.baseUrl, '/api/admin/group/${widget.usergroup.id}'),
+        Uri.http(
+            AppConstant.baseUrl, '/api/admin/group/${widget.usergroup.id}'),
         headers: <String, String>{
           "Content-type": "application/json; charset=UTF-8",
           "Authorization": "Bearer $token"
@@ -202,7 +205,8 @@ class _EditUserGroupPageState extends State<EditUserGroupPage> {
       );
 
       if (response.statusCode == 200) {
-        HotMessage.showToast('Thành công', 'Cập nhật nhóm người dùng thành công');
+        HotMessage.showToast(
+            'Thành công', 'Cập nhật nhóm người dùng thành công');
         Navigator.pop(context);
       } else {
         HotMessage.showToast('Lỗi', 'Cập nhật nhóm người dùng thành công');
@@ -220,7 +224,8 @@ class _EditUserGroupPageState extends State<EditUserGroupPage> {
     try {
       var token = await Auth.getAccessToken();
       final response = await http.delete(
-        Uri.http(AppConstant.baseUrl, '/api/admin/group/${widget.usergroup.id}'),
+        Uri.http(
+            AppConstant.baseUrl, '/api/admin/group/${widget.usergroup.id}'),
         headers: <String, String>{
           "Content-type": "application/json; charset=UTF-8",
           "Authorization": "Bearer $token"
@@ -245,8 +250,8 @@ class _EditUserGroupPageState extends State<EditUserGroupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sửa thông tin nhóm người dùng'),
+      appBar: MyAppBar(
+        title: 'Sửa thông tin nhóm người dùng',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -286,8 +291,8 @@ class _EditUserGroupPageState extends State<EditUserGroupPage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Xác nhận'),
-                        content:
-                            Text('Bạn có chắc chắn muốn xoá nhóm người dùng này không?'),
+                        content: Text(
+                            'Bạn có chắc chắn muốn xoá nhóm người dùng này không?'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -378,8 +383,8 @@ class _CreateUserGroupPageState extends State<CreateUserGroupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tạo nhóm người dùng mới'),
+      appBar: MyAppBar(
+        title: 'Tạo nhóm người dùng mới',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

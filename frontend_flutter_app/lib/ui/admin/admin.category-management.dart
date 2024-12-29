@@ -272,9 +272,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sửa thông tin danh mục'),
-      ),
+      appBar: MyAppBar(title: 'Sửa thông tin danh mục'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -405,9 +403,7 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tạo danh mục mới'),
-      ),
+      appBar: MyAppBar(title: 'Tạo danh mục mới'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
