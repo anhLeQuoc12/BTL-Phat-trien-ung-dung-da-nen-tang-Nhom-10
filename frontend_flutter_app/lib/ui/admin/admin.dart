@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_flutter_app/constant.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
 import 'package:frontend_flutter_app/helper/hotmessage.dart';
+import 'package:frontend_flutter_app/main.dart';
 import 'package:frontend_flutter_app/ui/app-bar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -50,6 +51,15 @@ class _AdminPageState extends State<AdminPage> {
       drawer: Drawer(
         child: ListView(
           children: [
+            ListTile(
+              title: const Text('Trang chủ'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage(title: "Ứng dụng đi chợ tiện lợi")),
+                );
+              },
+            ),
             ListTile(
               title: const Text('Quản lý người dùng'),
               onTap: () {
