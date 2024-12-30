@@ -8,6 +8,7 @@ const auth = require("./routes/auth");
 const recipeRoutes = require("./routes/recipe");
 const mealPlanRoutes = require("./routes/mealPlan");
 const mealSuggestRoutes = require("./routes/mealSuggest");
+const food = require("./routes/food");
 // const weeklyShoppingReportRoutes = require("./routes/weekly-shopping-report");
 const { default: mongoose } = require("mongoose");
 const cors = require('cors');
@@ -34,6 +35,7 @@ app.use("/api/recipe", recipeRoutes);
 app.use("/api/mealPlan", mealPlanRoutes);
 app.use("/api/mealSuggest", mealSuggestRoutes);
 app.use("/api/auth", auth);
+app.use("/api/food", food);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

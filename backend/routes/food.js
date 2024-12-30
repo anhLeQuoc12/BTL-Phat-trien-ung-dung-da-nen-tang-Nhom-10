@@ -4,11 +4,11 @@ const { addFood, updateFood, deleteFood, getFoodsByCategory, getAllCategories } 
 const {getAllUnits} = require("../services/unitManagement.service");
 
 const router = express.Router();
-router.post('/', authMiddleware, addFood);
-router.put('/', authMiddleware, updateFood);
-router.delete('/', authMiddleware, deleteFood);
+// router.post('/', authMiddleware, addFood);
+// router.put('/', authMiddleware, updateFood);
+// router.delete('/', authMiddleware, deleteFood);
 router.get('/category/:id', authMiddleware, getFoodsByCategory);
-router.get('/category', authMiddleware, getAllCategories);
+// router.get('/category', authMiddleware, getAllCategories);
 
 module.exports = router;
 
