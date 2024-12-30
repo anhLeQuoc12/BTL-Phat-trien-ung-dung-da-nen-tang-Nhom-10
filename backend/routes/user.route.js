@@ -5,7 +5,7 @@ const { createUser, changePassword, changeUserInfo } = require('../controllers/u
 const router = express.Router();
 
 router.post('', createUser);
-router.put('/:id/password', authMiddleware, changePassword);
+router.put('/password', authMiddleware, changePassword);
 router.put('/', authMiddleware, changeUserInfo);
 
 module.exports = router;
