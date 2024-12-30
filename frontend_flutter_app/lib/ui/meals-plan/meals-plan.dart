@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/ui/app-bar.dart';
 import 'package:frontend_flutter_app/ui/meals-plan/edit-meal-screen.dart';
 import 'package:frontend_flutter_app/ui/meals-plan/meal-plan-service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -181,15 +182,16 @@ class _MealPlanScreenState extends State<MealsPlanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dự định bữa ăn'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // Quay lại trang trước
-          },
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Dự định bữa ăn'),
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back),
+      //     onPressed: () {
+      //       Navigator.pop(context); // Quay lại trang trước
+      //     },
+      //   ),
+      // ),
+      appBar: const MyAppBar(title: "Dự định bữa ăn"),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

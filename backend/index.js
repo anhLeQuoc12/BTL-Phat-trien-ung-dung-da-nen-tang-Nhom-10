@@ -12,6 +12,7 @@ const mealSuggestRoutes = require("./routes/mealSuggest");
 const weeklyShoppingReportRoutes = require("./routes/weekly-shopping-report");
 const { default: mongoose } = require("mongoose");
 const cors = require('cors');
+const { createWeeklyReportManually } = require("./controllers/weekly-shopping-report");
 
 const app = express();
 dotenv.config();

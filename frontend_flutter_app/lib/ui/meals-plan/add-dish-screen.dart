@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/ui/app-bar.dart';
 
 class AddDishScreen extends StatefulWidget {
   const AddDishScreen({Key? key}) : super(key: key);
@@ -19,23 +20,24 @@ class _AddDishScreenState extends State<AddDishScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Thêm công thức nấu ăn'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              // TODO: Xử lý hành động khi nhấn vào icon người dùng
-            },
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Thêm công thức nấu ăn'),
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back),
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       icon: const Icon(Icons.person),
+      //       onPressed: () {
+      //         // TODO: Xử lý hành động khi nhấn vào icon người dùng
+      //       },
+      //     ),
+      //   ],
+      // ),
+      appBar: const MyAppBar(title: "Thêm công thức nấu ăn"),
       body: SingleChildScrollView( // Cho phép cuộn khi nội dung quá dài
         child: Padding(
           padding: const EdgeInsets.all(16.0),

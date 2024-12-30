@@ -132,7 +132,8 @@ class _ReportScreenState extends State<ReportScreen> {
                   chosenWeek = value!;
                   final dateQuerySentToServer = getStartDateAndEndDate(value);
                   resFuture = getWeeklyShoppingReport(
-                      dateQuerySentToServer["startDate"], dateQuerySentToServer["endDate"]);
+                      dateQuerySentToServer["startDate"],
+                      dateQuerySentToServer["endDate"]);
                 });
               },
               items: weeksList.map<DropdownMenuItem<String>>(
@@ -145,7 +146,7 @@ class _ReportScreenState extends State<ReportScreen> {
               ).toList(),
             ),
             Container(
-              margin: EdgeInsets.fromLTRB(0, 30, 0, 30),
+              margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -168,15 +169,25 @@ class _ReportScreenState extends State<ReportScreen> {
             FutureBuilder(
               future: resFuture,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(
+                      child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ));
+                } else if (snapshot.hasData) {
                   final report = snapshot.data!;
                   final List purchasedFoods = report["purchasedFoods"];
                   return Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.fromLTRB(25, 0, 25, 20),
                     child: Column(
+                      // mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(20),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -199,6 +210,8 @@ class _ReportScreenState extends State<ReportScreen> {
                           ),
                         ),
                         ListView.separated(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
                           itemCount: purchasedFoods.length,
                           itemBuilder: (context, index) {
                             final purchasedItem = purchasedFoods[index];
@@ -206,7 +219,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             final foodUnit =
                                 purchasedItem["foodId"]["unitId"]["name"];
                             return Container(
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(15),
                               color: Theme.of(context)
                                   .colorScheme
                                   .primaryContainer,
@@ -216,14 +229,14 @@ class _ReportScreenState extends State<ReportScreen> {
                                 children: [
                                   Text(foodName),
                                   Text(
-                                      purchasedItem["quantity"] + " $foodUnit"),
+                                      "${purchasedItem["quantity"]} $foodUnit"),
                                   Text(purchasedItem["percentageWithLastWeek"])
                                 ],
                               ),
                             );
                           },
                           separatorBuilder: (context, index) {
-                            return Divider();
+                            return Divider(height: 1,);
                           },
                         )
                       ],
@@ -247,7 +260,11 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                 ));
               },
-            )
+            ),
+            Container(
+                      margin: EdgeInsets.only(bottom: 40),
+                      child: Text(""),
+                    )
           ],
         ),
       ),
