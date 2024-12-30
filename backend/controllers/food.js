@@ -25,7 +25,22 @@ async function createFood(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+async function getFoodsByCategory(req, res) {
+    // const { categoryId } = req.body;
+    const categoryId  = req.params.id;
 
+    try {
+        const foods = await Food.find({
+            categoryId: categoryId
+        })
+            .populate("unitId", "name")
+            .populate("categoryId", "name")
+            .exec();
+        return res.status(200).json(foods);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
 async function getAllFoods(req, res) {
     try {
         const foods = await Food.find({})
@@ -111,6 +126,7 @@ async function deleteFoodById(req, res) {
 }
 
 module.exports = {
+    getFoodsByCategory,
     createFood,
     getAllFoods,
     getFoodById,
