@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/ui/meals-plan/dish-selection-screen.dart';
 
 class EditMealScreen extends StatefulWidget {
   final String mealTime;
@@ -88,23 +89,39 @@ class _EditMealScreenState extends State<EditMealScreen> {
                 itemBuilder: (context, index) {
                   final dish = _dishes[index];
                   return Card( // Sử dụng Card để tạo hiệu ứng nổi
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Text(
-                            dish is String ? dish : dish.toString(),
-                            textAlign: TextAlign.center,
+                    child: InkWell(
+                      onTap: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DishSelectionScreen(),
                           ),
-                        ),
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                            onPressed: () => _deleteDish(index),
+                        );
+                        if (result != null) {
+                          // Cập nhật món ăn trong danh sách _dishes
+                          setState(() {
+                            _dishes[index] = result;
+                          });
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: Text(
+                              dish is String ? dish : dish.toString(),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                              onPressed: () => _deleteDish(index),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
