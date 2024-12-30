@@ -54,7 +54,7 @@ class _FridgeScreenState extends State<FridgeScreen>
 
     try {
       final res1 = await http.get(
-        Uri.parse('http://10.0.2.2:1000/api/food/category'),
+        Uri.parse('http://10.0.2.2:1000/api/admin/category'),
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
       );
 
@@ -484,9 +484,11 @@ class _FridgeScreenState extends State<FridgeScreen>
   Future<void> _deleteCategoryItem(
       BuildContext context, item, idx, category) async {
     var token = await Auth.getAccessToken();
-    await http.delete(Uri.parse('http://10.0.2.2:1000/api/food'),
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-        body: {"name": item});
+    final id = categoriesData.firstWhere(
+          (item) => item["name"] == item,
+      orElse: () => null,
+    )?["_id"];
+    await http.delete(Uri.parse('http://10.0.2.2:1000/api/admin/food/${id}'), headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     setState(() {
       products[category]?.remove(item);
     });
@@ -549,7 +551,7 @@ class _FridgeScreenState extends State<FridgeScreen>
     var token = await Auth.getAccessToken();
 
     // Gọi API thêm hoặc cập nhật sản phẩm
-    const url = 'http://10.0.2.2:1000/api/food';
+    const url = 'http://10.0.2.2:1000/api/admin/food';
     try {
       final response = type == 'add' ?
       await http.post(Uri.parse(url), headers: {HttpHeaders.authorizationHeader: "Bearer $token"}, body: {
