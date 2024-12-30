@@ -25,7 +25,7 @@ class Auth {
       print("not authenticated");
       return false;
     } else {
-      final res = await http.get(Uri.parse("http://10.0.2.2:1000/api/auth"),
+      final res = await http.get(Uri.parse("http://127.0.0.1:1000/api/auth"),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
       if (res.statusCode == 200) {
         print("authenticated");
@@ -39,7 +39,7 @@ class Auth {
 
   static Future<void> logIn(String phone, String password) async {
     final res = await http.post(
-        Uri.parse("http://10.0.2.2:1000/api/auth/login"),
+        Uri.parse("http://127.0.0.1:1000/api/auth/login"),
         headers: <String, String>{
           "Content-type": "application/json; charset=UTF-8"
         },
