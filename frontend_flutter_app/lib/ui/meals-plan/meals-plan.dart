@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter_app/ui/meals-plan/edit-meal-screen.dart';
+import 'package:frontend_flutter_app/ui/meals-plan/meal-plan-service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert'; // Thư viện JSON
 import 'package:http/http.dart' as http;
@@ -46,22 +47,43 @@ class _MealPlanScreenState extends State<MealsPlanScreen> {
   // Gửi request GET đến server để lấy dữ liệu
   Future<void> _fetchMealData() async {
     try {
-      final response = await http.get(Uri.parse('https://api.example.com/meals'));
-      if (response.statusCode == 200) {
-        final List<dynamic> mealsData = json.decode(response.body);
-        setState(() {
-          _meals = mealsData.map((meal) => {
-            'mealTime': meal['mealTime'],
-            'dishes': List<dynamic>.from(meal['dishes']), // Thay đổi kiểu dữ liệu thành List<dynamic>
-          }).toList();
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
+      final userId = 'your_userId'; // Thay thế bằng userId của người dùng
+      final token = 'your_token'; // Thay thế bằng token của người dùng
+
+      // Gửi 3 request để lấy meal plan cho "Sáng", "Trưa", "Tối"
+      final responses = await Future.wait([
+        MealPlanService.getMealPlansWithUserIdAtTime(userId, 'Sáng', token: token),
+        MealPlanService.getMealPlansWithUserIdAtTime(userId, 'Trưa', token: token),
+        MealPlanService.getMealPlansWithUserIdAtTime(userId, 'Tối', token: token),
+      ]);
+
+      // Xử lý kết quả trả về
+      final mealsData = responses.map((response) {
+        if (response.statusCode == 200) {
+          final List<dynamic> mealPlans = json.decode(response.body);
+          // Giả sử mỗi response trả về một list chứa 1 meal plan
+          if (mealPlans.isNotEmpty) {
+            final mealPlan = mealPlans[0];
+            return {
+              'mealTime': mealPlan['Time'],
+              'dishes': mealPlan['recipes'].map((recipe) => recipe['recipeId']).toList(),
+            };
+          }
+        } else {
+          print('Lỗi khi lấy meal plan: ${response.statusCode}');
+        }
+        return null; // Trả về null nếu có lỗi hoặc không tìm thấy meal plan
+      }).whereType<Map<String, dynamic>>().toList(); // Lọc bỏ các phần tử null
+
+      setState(() {
+        _meals = mealsData;
+      });
+
     } catch (error) {
       print('Error fetching data: $error');
     }
   }
+
 
   // Hàm lưu dữ liệu
   Future<void> _saveMeals() async {

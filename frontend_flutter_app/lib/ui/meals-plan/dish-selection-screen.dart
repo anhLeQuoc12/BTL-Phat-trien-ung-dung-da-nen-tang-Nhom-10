@@ -66,13 +66,18 @@ class _DishSelectionScreenState extends State<DishSelectionScreen> {
                 children: [
                   const Text('Không tìm thấy món ăn'),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final result = await Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const AddDishScreen(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const AddDishScreen()),
                       );
+
+                      // Kiểm tra kết quả trả về
+                      if (result != null && result is Map<String, dynamic>) {
+                        // Trả về dữ liệu món ăn mới cho EditMealScreen
+                        Navigator.pop(context, result);
+                      }
+
                     },
                     child: const Text('Thêm món ăn mới'),
                   ),

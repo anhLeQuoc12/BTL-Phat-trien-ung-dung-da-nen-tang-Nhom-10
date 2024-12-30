@@ -88,40 +88,61 @@ class _EditMealScreenState extends State<EditMealScreen> {
                 itemCount: _dishes.length,
                 itemBuilder: (context, index) {
                   final dish = _dishes[index];
-                  return Card( // Sử dụng Card để tạo hiệu ứng nổi
+                  return Card(
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 3, // Sử dụng Card để tạo hiệu ứng nổi
                     child: InkWell(
                       onTap: () async {
                         final result = await Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => const DishSelectionScreen(),
-                          ),
+                          MaterialPageRoute(builder: (context) => const DishSelectionScreen()),
                         );
-                        if (result != null) {
+
+                        // Kiểm tra kết quả trả về
+                        if (result != null && result is Map<String, dynamic>) {
                           // Cập nhật món ăn trong danh sách _dishes
                           setState(() {
                             _dishes[index] = result;
                           });
                         }
                       },
-                      child: Stack(
-                        children: [
-                          Center(
-                            child: Text(
-                              dish is String ? dish : dish.toString(),
-                              textAlign: TextAlign.center,
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    dish is String ? dish : dish['name'], // Hiển thị tên món ăn
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // Bỏ qua Image.network
+                                  if (dish is Map && dish['content'] != null) // Kiểm tra content có tồn tại không
+                                    Text(
+                                      dish['content'].toString(),
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                              onPressed: () => _deleteDish(index),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                                onPressed: () => _deleteDish(index),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                     ),
                   );
                 },

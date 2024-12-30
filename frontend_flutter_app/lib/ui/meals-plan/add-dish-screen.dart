@@ -154,10 +154,16 @@ class _AddDishScreenState extends State<AddDishScreen> {
                           // Lưu dữ liệu vào cơ sở dữ liệu
                           // ...
                           // Sau khi lưu thành công, hiển thị thông báo hoặc điều hướng người dùng
+                          final newDish = {
+                            'name': _dishNameController.text,
+                            'content': _dishContentController.text,
+                            // ... các thông tin khác của món ăn
+                          };
+
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Đã thêm công thức')),
                           );
-                          Navigator.pop(context);
+                          Navigator.pop(context, newDish);
                         }
                       },
                       child: const Text('Thêm công thức'),
