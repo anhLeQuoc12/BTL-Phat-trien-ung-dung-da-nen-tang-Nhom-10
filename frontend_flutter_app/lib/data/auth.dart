@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:frontend_flutter_app/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,7 +26,7 @@ class Auth {
       print("not authenticated");
       return "Not authenticated";
     } else {
-      final res = await http.get(Uri.parse("http://10.0.2.2:1000/api/auth"),
+      final res = await http.get(Uri.parse("http://${AppConstant.baseUrl}/api/auth"),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
       if (res.statusCode == 200) {
         print("authenticated");
@@ -40,7 +41,7 @@ class Auth {
 
   static Future<dynamic> logIn(String phone, String password) async {
     final res = await http.post(
-        Uri.parse("http://10.0.2.2:1000/api/auth/login"),
+        Uri.parse("http://${AppConstant.baseUrl}/api/auth/login"),
         headers: <String, String>{
           "Content-type": "application/json; charset=UTF-8"
         },
