@@ -91,7 +91,9 @@ async function getWeeklyReport(req, res) {
         if (weeklyReport) {
             return res.status(200).json(weeklyReport);
         } else {
-            return res.status(400).json({ message: "There has errors while processing in server."});
+            // return res.status(400).json({ message: "There has errors while processing in server."});
+            return res.status(400).json({ message: "No data."});
+
         }
     } catch (error) {
         return res.status(500).json({ message: error.message });

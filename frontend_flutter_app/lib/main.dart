@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/admin/admin.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
 import 'package:frontend_flutter_app/models/recipe.dart';
 import 'package:frontend_flutter_app/ui/app-bar.dart';
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
       initialRoute: initialRoute,
       routes: {
         "/home": (context) => MyHomePage(title: "Ứng dụng đi chợ tiện lợi"),
-        "/admin": (context) => AdminPage()
+        "/admin": (context) => AdminPage(),
         "/login": (context) => LoginScreen(),
         "/shopping-list": (context) => ShoppingListScreen(),
         "/meals-plan": (context) => MealsPlanScreen(),

@@ -38,7 +38,7 @@ class Auth {
     }
   }
 
-  static Future<void> logIn(String phone, String password) async {
+  static Future<dynamic> logIn(String phone, String password) async {
     final res = await http.post(
         Uri.parse("http://10.0.2.2:1000/api/auth/login"),
         headers: <String, String>{
@@ -51,6 +51,7 @@ class Auth {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("UDDCTL_Flutter_accessToken", body["token"]);
       accessToken = body["token"];
+      return body;
     } else {
       print("Login failed");
       throw Error();
