@@ -96,6 +96,11 @@ const deleteFridgeItemById = async (id, userId) => {
 
 const markItemUsed = async (id, userId, usedQuantity) => {
 	try {
+
+		if (!ObjectId.isValid(id)) {
+			throw new Error('Invalid ObjectId');
+		}
+		
 		const fridgeItem = await FridgeItem.findOne({ 
 			_id: new ObjectId(id), 
 			userId: userId 
