@@ -132,7 +132,7 @@ class _FridgeScreenState extends State<FridgeScreen>
           centerTitle: true,
         ),
         drawer: const MyAppDrawer(),
-        floatingActionButton: FloatingActionButton(onPressed: ()=>showPutItem(context,'add','') ,
+        floatingActionButton: FloatingActionButton(onPressed: ()=>showPutItem(context,'add','','') ,
           tooltip: 'Thêm thức ăn',child: const Icon(Icons.add), ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -303,7 +303,7 @@ class _FridgeScreenState extends State<FridgeScreen>
           actions: [
             TextButton(
               onPressed: () {
-                showPutItem(context, 'update',item);
+                showPutItem(context, 'update',item,category);
               },
               child: const Text('Cập nhật'),
             ),
@@ -375,7 +375,7 @@ class _FridgeScreenState extends State<FridgeScreen>
       },
     );
   }
-  void showPutItem(BuildContext context, String type, name) {
+  void showPutItem(BuildContext context, String type, name, category) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -385,8 +385,7 @@ class _FridgeScreenState extends State<FridgeScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Nhập tên sản phẩm
-                if(type=='add')TextField(
+               TextField(
                   controller: nameController,
                   decoration: const InputDecoration(
                     labelText: 'Tên sản phẩm',
@@ -454,7 +453,7 @@ class _FridgeScreenState extends State<FridgeScreen>
                 // Kiểm tra dữ liệu trước khi gọi API
                 if (_validateFields(type)) {
                   // Gọi API thêm hoặc cập nhật sản phẩm
-                  _putItem(context, type, name);
+                  _putItem(context, type, name, category);
                 }
               },
               child: Text(type == 'add' ? 'Thêm mới' : 'Cập nhật'),
@@ -484,10 +483,10 @@ class _FridgeScreenState extends State<FridgeScreen>
   Future<void> _deleteCategoryItem(
       BuildContext context, item, idx, category) async {
     var token = await Auth.getAccessToken();
-    final id = categoriesData.firstWhere(
-          (item) => item["name"] == item,
+    final id = productsData[category]?.firstWhere(
+          (e) => e['name'] == item,
       orElse: () => null,
-    )?["_id"];
+    )['_id'];
     await http.delete(Uri.parse('http://10.0.2.2:1000/api/admin/food/${id}'), headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     setState(() {
       products[category]?.remove(item);
@@ -546,25 +545,33 @@ class _FridgeScreenState extends State<FridgeScreen>
     );
   }
 
-  void _putItem(BuildContext context, String type,name) async {
+  void _putItem(BuildContext context, String type,name, category) async {
     // Dữ liệu gửi lên API
     var token = await Auth.getAccessToken();
-
-    // Gọi API thêm hoặc cập nhật sản phẩm
-    const url = 'http://10.0.2.2:1000/api/admin/food';
+    final id = productsData[category]?.firstWhere(
+          (e) => e['name'] == name,
+      orElse: () => null,
+    )['_id'];
     try {
       final response = type == 'add' ?
-      await http.post(Uri.parse(url), headers: {HttpHeaders.authorizationHeader: "Bearer $token"}, body: {
+      await http.post(Uri.parse('http://10.0.2.2:1000/api/admin/food'), headers: {HttpHeaders.authorizationHeader: "Bearer $token"}, body: {
         'name': nameController.text,
         'categoryId': categoryId,
         'unitId': unitId,
         'imageUrl': imageController.text.isNotEmpty ? imageController.text : '',
       }):
-      await http.put(Uri.parse(url), headers: {HttpHeaders.authorizationHeader: "Bearer $token"}, body: {
-        'name': name,
-        'categoryId': categoryId,
-        'unitId': unitId,
-        'imageUrl': imageController.text.isNotEmpty ? imageController.text : '',
+      await http.put(Uri.parse('http://10.0.2.2:1000/api/admin/food/$id'), headers: {HttpHeaders.authorizationHeader: "Bearer $token"}, body: {
+        'newName':  nameController.text,
+        'newCategoryId': categoryId,
+        'newUnitId': unitId,
+        'newImageUrl': imageController.text.isNotEmpty ? imageController.text : '',
+      });
+      print({
+        "id":id,
+        'newName':  nameController.text,
+        'newCategoryId': categoryId,
+        'newUnitId': unitId,
+        'newImageUrl': imageController.text.isNotEmpty ? imageController.text : '',
       });
       Navigator.pop(context);
       if(type != 'add'){
@@ -597,7 +604,7 @@ class _FridgeScreenState extends State<FridgeScreen>
       return true;
     }else if ( categoryId == null || unitId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Danh mục và đơn vị là bắt buộc')),
+        SnackBar(content: Text('Phải cần ít nhất 1 trường thay đổi')),
       );return false;
     }
     return true;
