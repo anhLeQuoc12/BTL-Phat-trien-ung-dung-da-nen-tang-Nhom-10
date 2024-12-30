@@ -63,6 +63,7 @@ flutter:
     - assets/recipe.png
     - assets/search.png
     - assets/pie-chart.png
+    - assets/fridge-img/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
