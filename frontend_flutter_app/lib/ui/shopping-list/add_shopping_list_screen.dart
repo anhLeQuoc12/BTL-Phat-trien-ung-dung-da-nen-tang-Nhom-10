@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/constant.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:frontend_flutter_app/data/auth.dart';
@@ -15,7 +16,7 @@ class _AddShoppingListScreenState extends State<AddShoppingListScreen> {
   bool isLoading = false;
 
   Future<void> _saveList() async {
-    const String apiUrl = "http://localhost:1000/api/list/create-list";
+    const String apiUrl = "http://${AppConstant.baseUrl}/api/list/create-list";
 
     // Lấy token từ Auth.getAccessToken() và sử dụng token làm userId
     String? token = await Auth.getAccessToken(); // Lấy token từ Auth package

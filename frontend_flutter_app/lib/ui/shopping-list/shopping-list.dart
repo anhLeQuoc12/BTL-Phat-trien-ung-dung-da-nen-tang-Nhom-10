@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/constant.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:frontend_flutter_app/data/auth.dart';
@@ -30,7 +31,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     }
 
     final response = await http.get(
-      Uri.parse('http://localhost:1000/api/list/getByUserId'),
+      Uri.parse('http://${AppConstant.baseUrl}/api/list/getByUserId'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -79,7 +80,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     }
 
     final response = await http.delete(
-      Uri.parse('http://localhost:1000/api/list/$id/delete'),
+      Uri.parse('http://${AppConstant.baseUrl}/api/list/$id/delete'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -112,7 +113,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     }
 
     final response = await http.patch(
-      Uri.parse('http://localhost:1000/api/list/$id/share'),
+      Uri.parse('http://${AppConstant.baseUrl}/api/list/$id/share'),
       headers: {
         'Authorization': 'Bearer $token',
       },

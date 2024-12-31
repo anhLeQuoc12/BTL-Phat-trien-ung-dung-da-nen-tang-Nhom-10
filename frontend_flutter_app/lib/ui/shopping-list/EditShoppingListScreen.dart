@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/constant.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:frontend_flutter_app/data/auth.dart';
@@ -72,7 +73,7 @@ class _EditShoppingListScreenState extends State<EditShoppingListScreen> {
     try {
       final listId = widget.shoppingList["_id"];
       final response = await http.put(
-        Uri.parse('http://localhost:1000/api/list/$listId/edit'),
+        Uri.parse('http://${AppConstant.baseUrl}/api/list/$listId/edit'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

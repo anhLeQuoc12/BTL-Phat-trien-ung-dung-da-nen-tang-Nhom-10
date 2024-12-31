@@ -51,7 +51,7 @@ class MyAppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Image(
-              image: AssetImage("assets/recipe.png"),
+              image: AssetImage("assets/recipe/recipe.png"),
               width: 40,
               height: 40,
             ),
@@ -69,7 +69,7 @@ class MyAppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Image(
-              image: AssetImage("assets/pie-chart.png"),
+              image: AssetImage("assets/report/pie-chart.png"),
               width: 40,
               height: 40,
             ),

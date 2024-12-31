@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
+import 'package:frontend_flutter_app/ui/fridge/addProduct.dart';
+import 'package:frontend_flutter_app/ui/fridge/productDetail.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 
 class FridgeTab extends StatefulWidget {
   const FridgeTab({super.key});
@@ -38,7 +39,8 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
       );
 
       if (response.statusCode == 228) {
-        final jsonData = json.decode(response.body); // Trả về dạng Map<String, dynamic>
+        final jsonData =
+            json.decode(response.body); // Trả về dạng Map<String, dynamic>
 
         // Chuyển đổi dữ liệu từ JSON
         final List<dynamic> items = jsonData['items'];
@@ -135,7 +137,9 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
                 ]),
                 GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, "/fridge/add-product");
+                      // Navigator.pushNamed(context, "/fridge/add-product");
+                      Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddProduct()));
                     },
                     child: const Icon(Icons.add)),
               ],
@@ -330,7 +334,9 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
       ),
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/fridge/product-detail");
+          // Navigator.pushNamed(context, "/fridge/product-detail");
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ProductDetail()));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -390,8 +396,8 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
     );
   }
 
-  void showDeleteConfirmationDialog(BuildContext context, String itemName,
-      Function onConfirm) {
+  void showDeleteConfirmationDialog(
+      BuildContext context, String itemName, Function onConfirm) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -410,8 +416,8 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: Colors.white,
               ),
               onPressed: () {
                 onConfirm();

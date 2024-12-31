@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.3
   http: ^1.2.2
+  flutter_typeahead: ^5.2.0
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -59,9 +61,9 @@ flutter:
     - assets/grocery-cart.png
     - assets/fried-rice.png
     - assets/fridge.png
-    - assets/recipe.png
+    - assets/recipe/
     - assets/search.png
-    - assets/pie-chart.png
+    - assets/report/
     - assets/fridge-img/
 
   # The following line ensures that the Material Icons font is

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -25,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("Ứng dụng đi chợ tiện lợi"),
+        centerTitle: true,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -44,7 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(10, 0, 10, 4),
                   child: TextFormField(
-                    decoration: const InputDecoration(hintText: "Số điện thoại"),
+                    decoration:
+                        const InputDecoration(hintText: "Số điện thoại"),
                     controller: phoneInputController,
                     validator: (String? value) {
                       if (value == null || value.isEmpty) {
@@ -72,9 +74,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        await Auth.logIn(phoneInputController.text,
+                        final result = await Auth.logIn(
+                            phoneInputController.text,
                             passwordInputController.text);
-                        Navigator.pushReplacementNamed(context, "/home");
+                        if (result["accountRole"] == "admin") {
+                          Navigator.pushReplacementNamed(context, "/admin");
+                        } else {
+                          Navigator.pushReplacementNamed(context, "/home");
+                        }
                       }
                     },
                     child: Text("Đăng nhập"),
