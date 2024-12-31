@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_flutter_app/admin/admin.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
 import 'package:frontend_flutter_app/models/recipe.dart';
+import 'package:frontend_flutter_app/ui/admin/admin.dart';
 import 'package:frontend_flutter_app/ui/app-bar.dart';
 import 'package:frontend_flutter_app/ui/drawer.dart';
 import 'package:frontend_flutter_app/ui/fridge/fridge.dart';
@@ -17,6 +17,7 @@ import 'package:frontend_flutter_app/ui/shopping-list/shopping-list.dart';
 import 'package:frontend_flutter_app/ui/user/change-info/change-info.dart';
 import 'package:frontend_flutter_app/ui/user/change-password/change-password.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Ứng dụng đi chợ tiện lợi - Flutter',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
         "/search": (context) => SearchScreen(),
         "/report": (context) => ReportScreen(),
         "/user/change-info": (context) => ChangeInfoScreen(),
-        "/user/change-password": (context) => ChangePasswordScreen()
+        "/user/change-password": (context) => ChangePasswordScreen(),
       },
     );
   }

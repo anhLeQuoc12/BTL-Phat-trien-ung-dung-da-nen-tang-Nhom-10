@@ -196,6 +196,18 @@ class _EditUserPageState extends State<EditUserPage> {
   }
 
   Future<void> updateUser() async {
+    if (nameController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên người dùng không được để trống');
+      return;
+    }
+    if (emailController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên người dùng không được để trống');
+      return;
+    }
+    if (phoneController.text.trim().isEmpty) {
+      HotMessage.showToast('Lỗi', 'Tên người dùng không được để trống');
+      return;
+    }
     try {
       var token = await Auth.getAccessToken();
       var updateBody = {
@@ -319,24 +331,7 @@ class UserDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chi tiết người dùng'),
-        backgroundColor: Colors.purple,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              // Handle profile icon action
-            },
-          ),
-        ],
-      ),
+      appBar: MyAppBar(title: 'Chi tiết người dùng'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
