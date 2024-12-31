@@ -1,4 +1,6 @@
 const { Schema, SchemaTypes, model } = require("mongoose");
+const User = require("./user.model");
+const Food = require("./food");
 
 const weeklyShoppingReportSchema = new Schema({
     userId: {

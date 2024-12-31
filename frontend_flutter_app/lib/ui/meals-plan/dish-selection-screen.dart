@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/ui/app-bar.dart';
 import 'package:frontend_flutter_app/ui/meals-plan/add-dish-screen.dart';
 
 class DishSelectionScreen extends StatefulWidget {
@@ -23,9 +24,10 @@ class _DishSelectionScreenState extends State<DishSelectionScreen> {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chọn món ăn'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Chọn món ăn'),
+      // ),
+      appBar: const MyAppBar(title: "Chọn món ăn"),
       body: Column(
         children: [
           Padding(

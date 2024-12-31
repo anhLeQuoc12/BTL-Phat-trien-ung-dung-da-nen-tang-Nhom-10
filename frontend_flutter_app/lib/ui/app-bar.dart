@@ -23,6 +23,7 @@ class _MyAppBarState extends State<MyAppBar> {
     // TODO: implement build
     return AppBar(
       title: Text(widget.title),
+      centerTitle: true,
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       actions: <Widget>[
         PopupMenuButton<UserAccountOptions>(

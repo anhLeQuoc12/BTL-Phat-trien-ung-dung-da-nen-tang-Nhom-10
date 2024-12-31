@@ -239,8 +239,8 @@ class _EditUnitPageState extends State<EditUnitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sửa thông tin danh mục'),
+      appBar: const MyAppBar(
+        title: 'Sửa thông tin danh mục',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

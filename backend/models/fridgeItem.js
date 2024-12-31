@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
 const { SchemaTypes } = require('mongoose');
+const User = require('./user.model');
 
 //Item in fridge
 const fridgeItemSchema = new mongoose.Schema({
 	userId: {
 		type: SchemaTypes.ObjectId,
-		ref: "User",
+		ref: User,
 		required: true
 	},
 	food: {
 		type: Object,
-		ref: "Food",
+		// ref: "Food",
 		required: true
 	},
 	quantity: {
@@ -54,7 +55,7 @@ const fridgeItemSchema = new mongoose.Schema({
 const fridgeSchema = new mongoose.Schema({
 	userId: {
 		type: SchemaTypes.ObjectId,
-		ref: "User",
+		ref: User,
 		required: true
 	},
 	items: {
