@@ -14,7 +14,7 @@ const workloadRoutes = require("./routes/workload");
 
 // const weeklyShoppingReportRoutes = require("./routes/weekly-shopping-report");
 const { default: mongoose } = require("mongoose");
-const cors = require('cors');
+// const cors = require('cors');
 
 const app = express();
 dotenv.config();
