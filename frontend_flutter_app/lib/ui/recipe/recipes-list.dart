@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter_app/models/recipe.dart';
-import 'package:frontend_flutter_app/constant.dart';
-import 'package:frontend_flutter_app/data/auth.dart';
 import 'package:frontend_flutter_app/ui/app-bar.dart';
 import 'package:frontend_flutter_app/ui/drawer.dart';
 import 'package:frontend_flutter_app/ui/recipe/add-recipe.dart';
@@ -11,12 +9,6 @@ import 'package:provider/provider.dart';
 
 class RecipesListScreen extends StatelessWidget {
   const RecipesListScreen({super.key});
-  Future<void> getRecipesList() async {
-    final accessToken = await Auth.getAccessToken();
-    final res = await http.get(Uri.http(AppConstant.baseUrl, '/api/recipe'),
-        headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
-    print(res.body);
-  }
 
   @override
   Widget build(BuildContext context) {
