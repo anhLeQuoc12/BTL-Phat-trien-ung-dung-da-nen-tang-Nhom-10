@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
         "/shopping-list": (context) => ShoppingListScreen(),
         "/meals-plan": (context) => MealsPlanScreen(),
         "/fridge": (context) => FridgeScreen(),
+        "/fridge/add-product": (context) => const AddProduct(),
         "/recipe": (context) => const RecipesListScreen(),
         "/search": (context) => SearchScreen(),
         "/report": (context) => ReportScreen(),

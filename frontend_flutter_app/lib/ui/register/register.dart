@@ -32,9 +32,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (response.statusCode == 201) {
-        print("OK");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Tạo tài khoản thành công')),
+        );
+
+        Future.delayed(Duration(milliseconds: 500), () {
+          Navigator.pop(context);
+        });
       } else {
-        throw Exception('Failed to load data');
+        throw Exception('Failed to load data: ${response.body}');
       }
     } catch (error) {
       print('Error fetching data: $error');
