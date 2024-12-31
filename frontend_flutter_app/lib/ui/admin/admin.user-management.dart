@@ -242,6 +242,9 @@ class _EditUserPageState extends State<EditUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const MyAppBar(
+        title: 'Sửa thông tin người dùng',
+      ),
       appBar: MyAppBar(title: 'Sửa thông tin người dùng'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

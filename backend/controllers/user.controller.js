@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../services/user.service");
-const FridgeService = require("../services/fridge.service")
+const FridgeService = require("../services/fridge.service");
+const { UserModel } = require("../models");
 
 async function changeUserInfo(req, res) {
     const { newPhone, newEmail } = req.body;
@@ -23,6 +24,23 @@ async function changeUserInfo(req, res) {
     }
 }
 
+async function getUserInfo(req, res) {
+	const userId = res.locals.userId;
+
+	try {
+		const user = await UserModel.findOne({
+			_id: userId
+		}, "-password").exec();
+		if (user) {
+			return res.status(200).json(user);
+		} else {
+			throw Error();
+		}
+	} catch (error) {
+		return res.status(500).json({message: "There has errors while get the user data"});
+	}
+}
+
 const createUser = async (req, res) => {
 	try {
 		const userData = req.body;
@@ -39,7 +57,7 @@ const createUser = async (req, res) => {
 
 const changePassword = async (req, res) => {
 	try {
-		const userId = req.params.id;
+		const userId = res.locals.userId;
 		const data = req.body;
 		const result = await User.changePassword(userId, data);
 		return res.status(200).json({ status: "076", result });
@@ -50,6 +68,7 @@ const changePassword = async (req, res) => {
 
 module.exports = {
 	createUser,
+	getUserInfo,
 	changeUserInfo,
 	changePassword
 };

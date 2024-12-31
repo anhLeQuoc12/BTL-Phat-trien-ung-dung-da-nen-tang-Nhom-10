@@ -1,3 +1,4 @@
+const { Fridge } = require("../models/fridgeItem");
 const Recipe = require("../models/recipe");
 const ObjectId = require("mongodb").ObjectId;
 
@@ -7,6 +8,7 @@ async function createRecipe(req, res) {
 
     try {
         const alreadyExistedRecipe = await Recipe.findOne({
+            userId: userId,
             name: name
         }).exec();
 
@@ -91,15 +93,25 @@ async function updateRecipeById(req, res) {
     }
 
     try {
-        const updatedRecipe = await Recipe.findOneAndUpdate({
-            _id: new ObjectId(recipeId),
-            userId: userId
-        }, updateObject, { returnOriginal: false }).exec();
-        if (updatedRecipe) {
-            return res.status(200).json(updatedRecipe);
+        const alreadyExistedRecipe = await Recipe.findOne({
+            userId: userId,
+            name: newName
+        }).exec();
+
+        if (alreadyExistedRecipe) {
+            return res.status(400).json({ message: "Recipe with name " + newName + " has already existed." });
         } else {
-            return res.status(400).json({ message: "Can't find recipe with ID supplied." });
+            const updatedRecipe = await Recipe.findOneAndUpdate({
+                _id: new ObjectId(recipeId),
+                userId: userId
+            }, updateObject, { returnOriginal: false }).exec();
+            if (updatedRecipe) {
+                return res.status(200).json(updatedRecipe);
+            } else {
+                return res.status(400).json({ message: "Can't find recipe with ID supplied." });
+            }    
         }
+        
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -132,41 +144,70 @@ async function connectRecipeWithFridge(req, res) {
         const recipe = await Recipe.findOne({
             _id: new ObjectId(recipeId),
             userId: userId
-        }).populate("ingredients.foodId").exec();
+        }).populate({
+            path: "ingredients.foodId",
+            select: "name unitId",
+            populate: {
+                path: "unitId",
+                select: "name"
+            }
+        }).exec();
         const fridge = await Fridge.findOne({
             userId: userId
         }).exec();
 
+        const ingredients = recipe.ingredients;
         const items = fridge.items;
         let result = [];
-        for (const ingredient of recipe.ingredients) {
+        for (const ingredient of ingredients) {
             for (const item of items) {
 
-                if (item.food._id === ingredient.foodId._id) {
+                if (item.food.name === ingredient.foodId.name) {
                     let isSufficient;
                     let message;
-                    if (item.food.quantity >= ingredient.quantity) {
-                        if (item.food.expirationDate >= Date.now()) {
-                            isSufficient = false;
-                            message = "Food is expired!"
-                        } else {
-                            isSufficient = true;
-                            message = "Food is sufficient."
-                        }
-                    } else {
+                    if (item.expirationDate <= Date.now()) {
                         isSufficient = false;
-                        message = "Food is insufficient."
+                        message = "Food is expired!";
+                    } else {
+                        if (item.quantity - item.usedQuantity >= ingredient.quantity) {
+                            isSufficient = true;
+                            message = "Food is sufficient.";
+                        } else {
+                            isSufficient = false;
+                            message = "Food is insufficient."
+                        }
                     }
                     result.push({
                         foodId: ingredient.foodId._id,
                         foodName: ingredient.foodId.name,
-                        foodUnit: ingredient.foodId.unit,
+                        foodUnit: ingredient.foodId.unitId.name,
                         isSufficient: isSufficient,
                         message: message,
-                        available: item.food.quantity
+                        need: ingredient.quantity,
+                        available: item.quantity - item.usedQuantity,
                     })
                 }
             }
+        }
+
+        const dontHaveIngredients = ingredients.filter((ingredient) => {
+            for (const res of result) {
+                if (res.foodName === ingredient.foodId.name) {
+                    return false;
+                }
+            }
+            return true;
+        })
+        for (const ingredient of dontHaveIngredients) {
+            result.push({
+                foodId: ingredient.foodId._id,
+                foodName: ingredient.foodId.name,
+                foodUnit: ingredient.foodId.unitId.name,
+                isSufficient: false,
+                message: "Don't have food in fridge.",
+                need: ingredient.quantity,
+                available: 0,
+            })
         }
 
         res.status(200).json(result);

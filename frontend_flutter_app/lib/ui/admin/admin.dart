@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter_app/constant.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
+import 'package:frontend_flutter_app/ui/app-bar.dart';
 import 'package:frontend_flutter_app/helper/hotmessage.dart';
 import 'package:frontend_flutter_app/main.dart';
 import 'package:frontend_flutter_app/ui/app-bar.dart';
@@ -45,6 +46,8 @@ class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MyAppBar(
+        title: _title,
       appBar: MyAppBar(
         title: _title,
       ),

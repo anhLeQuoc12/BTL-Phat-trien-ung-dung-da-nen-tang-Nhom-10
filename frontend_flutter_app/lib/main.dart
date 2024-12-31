@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter_app/admin/admin.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
+import 'package:frontend_flutter_app/models/recipe.dart';
 import 'package:frontend_flutter_app/ui/admin/admin.dart';
 import 'package:frontend_flutter_app/ui/app-bar.dart';
 import 'package:frontend_flutter_app/ui/drawer.dart';
 import 'package:frontend_flutter_app/ui/fridge/fridge.dart';
+import 'package:frontend_flutter_app/ui/fridge/addProduct.dart';
+import 'package:frontend_flutter_app/ui/fridge/productDetail.dart';
 import 'package:frontend_flutter_app/ui/login/login.dart';
+import 'package:frontend_flutter_app/ui/register/register.dart';
 import 'package:frontend_flutter_app/ui/meals-plan/meals-plan.dart';
 import 'package:frontend_flutter_app/ui/recipe/recipes-list.dart';
 import 'package:frontend_flutter_app/ui/report/report.dart';
@@ -12,15 +17,29 @@ import 'package:frontend_flutter_app/ui/search/search.dart';
 import 'package:frontend_flutter_app/ui/shopping-list/shopping-list.dart';
 import 'package:frontend_flutter_app/ui/user/change-info/change-info.dart';
 import 'package:frontend_flutter_app/ui/user/change-password/change-password.dart';
+import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final bool isLoggedIn = await Auth.authenticate();
+  final authResult = await Auth.authenticate();
+  late String initialRoute;
+  if (authResult == "Not authenticated") {
+    initialRoute = "/login";
+  } else {
+    if (authResult["role"] == "admin") {
+      initialRoute = "/admin";
+    } else {
+      initialRoute = "/home";
+    }
+  }
   final MyApp myApp = MyApp(
-    initialRoute: isLoggedIn ? "/home" : "/login",
+    initialRoute: initialRoute,
   );
-  runApp(myApp);
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (context) => RecipeModel())],
+    child: myApp,
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -39,11 +58,14 @@ class MyApp extends StatelessWidget {
       initialRoute: initialRoute,
       routes: {
         "/home": (context) => MyHomePage(title: "Ứng dụng đi chợ tiện lợi"),
+        "/admin": (context) => AdminPage(),
         "/login": (context) => LoginScreen(),
+        "/register": (context) => RegisterScreen(),
         "/shopping-list": (context) => ShoppingListScreen(),
         "/meals-plan": (context) => MealsPlanScreen(),
         "/fridge": (context) => FridgeScreen(),
-        "/recipe": (context) => RecipesListScreen(),
+        "/fridge/add-product": (context) => const AddProduct(),
+        "/recipe": (context) => const RecipesListScreen(),
         "/search": (context) => SearchScreen(),
         "/report": (context) => ReportScreen(),
         "/user/change-info": (context) => ChangeInfoScreen(),
@@ -87,8 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
           const Expanded(
             flex: 2,
             child: Image(
-                image: AssetImage(
-                    "assets/icon-image-ud-di-cho-tien-loi.png")),
+                image: AssetImage("assets/icon-image-ud-di-cho-tien-loi.png")),
           ),
           Expanded(
             flex: 4,
@@ -176,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image(
-                                image: AssetImage("assets/recipe.png"),
+                                image: AssetImage("assets/recipe/recipe.png"),
                                 width: 50,
                                 height: 50,
                               ),
@@ -223,7 +244,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image(
-                                image: AssetImage("assets/pie-chart.png"),
+                                image:
+                                    AssetImage("assets/report/pie-chart.png"),
                                 width: 50,
                                 height: 50,
                               ),
