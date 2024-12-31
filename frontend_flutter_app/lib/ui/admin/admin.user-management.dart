@@ -16,6 +16,12 @@ class _UserManagementPageState extends State<UserManagementPage> {
     _users = fetchUsers();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _users = fetchUsers();
+  }
+
   Future<List<User>> fetchUsers() async {
     try {
       var token = await Auth.getAccessToken();
@@ -112,7 +118,11 @@ class _UserManagementPageState extends State<UserManagementPage> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           EditUserPage(user: users[index])),
-                                );
+                                ).then((_) {
+                                  setState(() {
+                                    _users = fetchUsers();
+                                  });
+                                });
                               },
                             ),
                             IconButton(
@@ -123,7 +133,11 @@ class _UserManagementPageState extends State<UserManagementPage> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           UserDetailPage(user: users[index])),
-                                );
+                                ).then((_) {
+                                  setState(() {
+                                    _users = fetchUsers();
+                                  });
+                                });
                               },
                             ),
                           ],
@@ -214,18 +228,19 @@ class _EditUserPageState extends State<EditUserPage> {
         'name': nameController.text,
         'email': emailController.text,
         'phone': phoneController.text,
-        'groupId': groupCodeController.text,
       };
+      if (groupCodeController.text.isNotEmpty) {
+        updateBody['groupId'] = groupCodeController.text;
+      }
       final response = await http.patch(
         Uri.http(AppConstant.baseUrl, '/api/admin/user/${widget.user.id}'),
         headers: <String, String>{
           "Content-type": "application/json; charset=UTF-8",
           "Authorization": "Bearer $token"
         },
-        body: json.encode({'updateBody': updateBody}),
+        body: json.encode(updateBody),
       );
-
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         Navigator.pop(context);
       } else {
         print('Lỗi');

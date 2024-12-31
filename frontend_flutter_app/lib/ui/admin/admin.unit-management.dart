@@ -21,6 +21,12 @@ class _UnitManagementPageState extends State<UnitManagementPage> {
     _searchController.addListener(_onSearchChanged);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _units = fetchUnits();
+  }
+
   Future<List<Unit>> fetchUnits() async {
     try {
       var token = await Auth.getAccessToken();
@@ -83,18 +89,46 @@ class _UnitManagementPageState extends State<UnitManagementPage> {
           Container(
             color: Colors.purple.shade50,
             padding: EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Tìm đơn vị',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Tìm đơn vị',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                  ),
                 ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+                SizedBox(width: 8.0),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateUnitPage(),
+                      ),
+                    ).then((_) {
+                      setState(() {
+                        _units = fetchUnits();
+                      });
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(fontSize: 16),
+                    backgroundColor: Colors.red, // Background color
+                    foregroundColor: Colors.white, // Text color
+                  ),
+                  icon: Icon(Icons.add, size: 20), // Add your desired icon here
+                  label: Text('Thêm đơn vị'), // Text for the button
+                ),
+              ],
             ),
           ),
 
@@ -198,7 +232,7 @@ class _EditUnitPageState extends State<EditUnitPage> {
           "Content-type": "application/json; charset=UTF-8",
           "Authorization": "Bearer $token"
         },
-        body: json.encode({'updateBody': updateBody}),
+        body: json.encode(updateBody),
       );
 
       if (response.statusCode == 200) {

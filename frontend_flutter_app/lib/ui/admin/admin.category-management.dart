@@ -21,6 +21,12 @@ class _CategoryManagementPageState extends State<CategoryManagementPage> {
     _searchController.addListener(_onSearchChanged);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _categories = fetchCategories();
+  }
+
   Future<List<Category>> fetchCategories() async {
     try {
       var token = await Auth.getAccessToken();
@@ -109,7 +115,11 @@ class _CategoryManagementPageState extends State<CategoryManagementPage> {
                       MaterialPageRoute(
                         builder: (context) => CreateCategoryPage(),
                       ),
-                    );
+                    ).then((_) {
+                      setState(() {
+                        _categories = fetchCategories();
+                      });
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     textStyle: TextStyle(fontSize: 16),
