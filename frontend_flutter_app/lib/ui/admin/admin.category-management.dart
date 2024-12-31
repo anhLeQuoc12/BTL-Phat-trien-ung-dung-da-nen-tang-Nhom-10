@@ -275,7 +275,6 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
       appBar: const MyAppBar(
         title: 'Sửa thông tin danh mục',
       ),
-      appBar: MyAppBar(title: 'Sửa thông tin danh mục'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

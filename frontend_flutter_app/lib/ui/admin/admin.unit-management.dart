@@ -248,7 +248,6 @@ class _EditUnitPageState extends State<EditUnitPage> {
       appBar: const MyAppBar(
         title: 'Sửa thông tin danh mục',
       ),
-      appBar: MyAppBar(title: 'Sửa thông tin đơn vị'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

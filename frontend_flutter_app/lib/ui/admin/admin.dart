@@ -48,8 +48,6 @@ class _AdminPageState extends State<AdminPage> {
     return Scaffold(
       appBar: MyAppBar(
         title: _title,
-      appBar: MyAppBar(
-        title: _title,
       ),
       drawer: Drawer(
         child: ListView(

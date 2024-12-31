@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_flutter_app/admin/admin.dart';
 import 'package:frontend_flutter_app/data/auth.dart';
 import 'package:frontend_flutter_app/models/recipe.dart';
 import 'package:frontend_flutter_app/ui/admin/admin.dart';
@@ -70,7 +69,6 @@ class MyApp extends StatelessWidget {
         "/report": (context) => ReportScreen(),
         "/user/change-info": (context) => ChangeInfoScreen(),
         "/user/change-password": (context) => ChangePasswordScreen(),
-        "/admin": (context) => AdminPage()
       },
     );
   }

@@ -245,7 +245,6 @@ class _EditUserPageState extends State<EditUserPage> {
       appBar: const MyAppBar(
         title: 'Sửa thông tin người dùng',
       ),
-      appBar: MyAppBar(title: 'Sửa thông tin người dùng'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
