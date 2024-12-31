@@ -19,7 +19,7 @@ class FridgeTab extends StatefulWidget {
 class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
   late final TabController tabController;
   int initialIndex = 1;
-  List<String> foodList = [];
+  List<Map<String, dynamic>> foodList = [];
   @override
   void initState() {
     super.initState();
@@ -32,12 +32,11 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
   Future<void> fetchData() async {
     try {
       final accessToken = await Auth.getAccessToken();
-      // Thay thế URL bằng API của bạn
+
       final response = await http.get(
           Uri.parse('http://10.0.2.2:1000/api/fridge'),
-          headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
-
-      print("response body: " + response.body);
+          headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"}
+      );
 
       if (response.statusCode == 228) {
         final jsonData =
@@ -48,8 +47,12 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
 
         // Cập nhật danh sách
         setState(() {
-          foodList =
-              items.map((item) => item['food']['name'].toString()).toList();
+          foodList = items.map((item) {
+            return {
+              'id': item['_id'],
+              'name': item['food']['name'].toString()
+            };
+          }).toList();
         });
       } else {
         throw Exception('Failed to load data');
@@ -142,7 +145,7 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
               ],
             ),
           ),
-          ...foodList.map((e) => item1(e)),
+          ...foodList.map((e) => item1(e['name'], e['id'])),
         ],
       ),
     );
@@ -174,7 +177,7 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
               ],
             ),
           ),
-          ...foodList.map((e) => item2(e)),
+          ...foodList.map((e) => item2(e['name'])),
         ],
       ),
     );
@@ -206,7 +209,7 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
               ],
             ),
           ),
-          ...foodList.map((e) => item3(e)),
+          ...foodList.map((e) => item3(e['name'])),
         ],
       ),
     );
@@ -320,7 +323,7 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
     );
   }
 
-  Widget item1(String name) {
+  Widget item1(String name, String itemId) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: const BoxDecoration(
@@ -358,7 +361,11 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showUsedQuantity(context, name, (String quantity) {
+                      markAsUsed(itemId, quantity);
+                    });
+                  },
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.deepPurple),
@@ -433,4 +440,86 @@ class _FridgeTabState extends State<FridgeTab> with TickerProviderStateMixin {
       },
     );
   }
+
+  void showUsedQuantity(BuildContext context, String itemId, Function(String) onConfirm) {
+    String quantity = '';
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            title: const Text(
+              'Đánh dấu thực phẩm đã sử dụng',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(height: 10),
+                TextField(
+                  decoration: InputDecoration(hintText: 'Số lượng?'),
+                  onChanged: (value) {
+                    quantity = value.toString();
+                  },
+                )
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  if (quantity.isNotEmpty) { // Kiểm tra giá trị có trống không
+                    onConfirm(itemId);
+                    Navigator.of(context).pop();
+                  } else {
+                    // Hiển thị thông báo hoặc xử lý khi không có giá trị
+                  }
+                },
+                child: const Text('Xác nhận'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Hủy bỏ'),
+              ),
+            ],
+          );
+        }
+        );
+  }
+
+  void markAsUsed(String itemId, String quantity) async {
+    try {
+      // final accessToken = await Auth.getAccessToken();
+      //
+      // final response = await http.post(
+      //     Uri.parse('http://10.0.2.2:1000/api/fridge/used/$itemId'),
+      //     headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
+      //     body: {"usedQuantity": quantity}
+      // );
+      //
+      // if (response.statusCode == 228) {
+      //   print("success");
+      // } else {
+      //   print(response.statusCode);
+      //   throw Exception('Failed to load data');
+
+      // }
+      print(itemId + "," + quantity);
+    } catch (error) {
+      print('Error fetching data: $error');
+    }
+  }
+
+
 }

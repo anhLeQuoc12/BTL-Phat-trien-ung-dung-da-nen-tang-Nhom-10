@@ -57,7 +57,7 @@ const createUser = async (req, res) => {
 
 const changePassword = async (req, res) => {
 	try {
-		const userId = req.params.id;
+		const userId = res.locals.userId;
 		const data = req.body;
 		const result = await User.changePassword(userId, data);
 		return res.status(200).json({ status: "076", result });

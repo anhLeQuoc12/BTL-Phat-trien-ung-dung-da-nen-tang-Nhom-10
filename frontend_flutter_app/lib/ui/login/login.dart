@@ -86,6 +86,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: Text("Đăng nhập"),
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: ElevatedButton(
+                    onPressed: () {
+                        Navigator.pushNamed(context, "/register");
+                        }
+                    ,
+                    child: Text("Đăng ký"),
+                  ),
                 )
               ],
             ),

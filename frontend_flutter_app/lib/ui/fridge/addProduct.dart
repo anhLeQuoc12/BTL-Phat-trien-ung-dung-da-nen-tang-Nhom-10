@@ -61,12 +61,6 @@ class _AddProductState extends State<AddProduct> {
                   ),
                   child: const Text("Thêm thực phẩm",
                       style: TextStyle(color: Colors.white))),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child:
-                    const Text("Hủy bỏ", style: TextStyle(color: Colors.white)),
-              )
             ])
           ],
         ),

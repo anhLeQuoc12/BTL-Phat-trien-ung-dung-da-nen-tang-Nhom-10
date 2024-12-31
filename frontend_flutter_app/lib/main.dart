@@ -5,7 +5,10 @@ import 'package:frontend_flutter_app/models/recipe.dart';
 import 'package:frontend_flutter_app/ui/app-bar.dart';
 import 'package:frontend_flutter_app/ui/drawer.dart';
 import 'package:frontend_flutter_app/ui/fridge/fridge.dart';
+import 'package:frontend_flutter_app/ui/fridge/addProduct.dart';
+import 'package:frontend_flutter_app/ui/fridge/productDetail.dart';
 import 'package:frontend_flutter_app/ui/login/login.dart';
+import 'package:frontend_flutter_app/ui/register/register.dart';
 import 'package:frontend_flutter_app/ui/meals-plan/meals-plan.dart';
 import 'package:frontend_flutter_app/ui/recipe/recipes-list.dart';
 import 'package:frontend_flutter_app/ui/report/report.dart';
@@ -55,6 +58,7 @@ class MyApp extends StatelessWidget {
         "/home": (context) => MyHomePage(title: "Ứng dụng đi chợ tiện lợi"),
         "/admin": (context) => AdminPage(),
         "/login": (context) => LoginScreen(),
+        "/register": (context) => RegisterScreen(),
         "/shopping-list": (context) => ShoppingListScreen(),
         "/meals-plan": (context) => MealsPlanScreen(),
         "/fridge": (context) => FridgeScreen(),

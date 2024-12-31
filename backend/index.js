@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors"); // Import cors
 const adminRoutes = require("./routes/admin.route");
 const foodRoutes = require("./routes/food");
+const categoryRoutes = require("./routes/category");
 const fridgeRoutes = require('./routes/fridge');
 const userRoutes = require("./routes/user.route");
 const auth = require("./routes/auth");
@@ -14,7 +15,6 @@ const listRoutes = require("./routes/list");
 const workloadRoutes = require("./routes/workload");
 const weeklyShoppingReportRoutes = require("./routes/weekly-shopping-report");
 const { default: mongoose } = require("mongoose");
-// const { createWeeklyReportManually } = require("./controllers/weekly-shopping-report");
 
 const app = express();
 dotenv.config();
@@ -39,6 +39,7 @@ mongoose
 // Các route
 app.use("/api/admin", adminRoutes);
 app.use("/api/food", foodRoutes);
+app.use("/api/category", categoryRoutes);
 app.use("/api/fridge", fridgeRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/recipe", recipeRoutes);
